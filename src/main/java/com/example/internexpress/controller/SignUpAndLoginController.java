@@ -38,11 +38,15 @@ public class SignUpAndLoginController {
     @FXML
     private Label errorLabel2;
 
+    @FXML
+    private ComboBox userTypeCombox1;
+
     private UserService userService;
 
     @FXML
     public void initialize() {
         genderCombobox.getItems().addAll("Male", "Female", "Other");
+        userTypeCombox1.getItems().addAll("Student", "Company");
     }
 
     public void setServices(UserService service) {
@@ -92,7 +96,8 @@ public class SignUpAndLoginController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String date = formatter.format(datePicker.getValue());
         try {
-            User user = userService.signup(firstNameField.getText(), lastNameField.getText(), date, gender, emailField2.getText(), passwordField2.getText());
+            User user = userService.signup(firstNameField.getText(), lastNameField.getText(), date, gender,
+                    emailField2.getText(), passwordField2.getText(), userTypeCombox1.getValue().toString());
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("main-view.fxml"));
 

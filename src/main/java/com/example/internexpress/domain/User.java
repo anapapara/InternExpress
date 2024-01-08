@@ -14,6 +14,41 @@ public class User extends Entity<Long>{
     private String graduatedFrom;
     private List<String>  interestedAreas;
 
+
+
+    private String companyName;
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+    @Override
+    public String toString() {
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", date='" + date + '\'' +
+                ", gender='" + gender + '\'' +
+                ", email='" + email + '\'' +
+                ", graduatedFrom='" + graduatedFrom + '\'' +
+                ", interestedAreas=" + interestedAreas +
+                ", userType='" + userType + '\'' +
+                '}';
+    }
+
+    private String userType;
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+
+
     public void setGraduatedFrom(String graduatedFrom) {
         this.graduatedFrom = graduatedFrom;
     }
@@ -22,17 +57,18 @@ public class User extends Entity<Long>{
         this.interestedAreas = interestedAreas;
     }
 
-    public User(String firstName, String lastName, String date, String gender, String email, String password) {
+    //user simplu
+    public User(String firstName, String lastName, String date, String gender, String email, String password,String userType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.date = date;
         this.gender = gender;
         this.password = password;
         this.email = email;
-        this.interestedAreas = new ArrayList<>();
+        this.userType = userType;
     }
     public User(String firstName, String lastName, String date, String gender, String email, String password,String graduatedFrom,
-                List<String>  interestedAreas) {
+                List<String>  interestedAreas, String userType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.date = date;
@@ -41,8 +77,20 @@ public class User extends Entity<Long>{
         this.email = email;
         this.graduatedFrom = graduatedFrom;
         this.interestedAreas = interestedAreas;
-
+        this.userType = userType;
     }
+
+    public User(String firstName, String lastName, String date, String gender, String password, String email, String companyName, String userType) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.date = date;
+        this.gender = gender;
+        this.password = password;
+        this.email = email;
+        this.companyName = companyName;
+        this.userType = userType;
+    }
+
     public User() {
 
     }
@@ -90,11 +138,6 @@ public class User extends Entity<Long>{
     }
 
     public void setPassword(String password) { this.password = password; }
-
-    @Override
-    public String toString() {
-        return  firstName + "  " + lastName ;
-    }
 
     @Override
     public boolean equals(Object o) {

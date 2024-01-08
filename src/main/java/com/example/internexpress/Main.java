@@ -41,7 +41,7 @@ public class Main extends Application {
         UserService userService = new UserService(userDatabaseRepository, new UserValidator());
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("controller/login-view.fxml"));
+        loader.setLocation(getClass().getResource("controller/login-register-WinternExpress.fxml"));
         BorderPane root = loader.load();
         SignUpAndLoginController ctrl = loader.getController();
         ctrl.setServices(userService);
