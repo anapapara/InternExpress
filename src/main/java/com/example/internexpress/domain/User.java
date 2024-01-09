@@ -14,9 +14,13 @@ public class User extends Entity<Long>{
     private String graduatedFrom;
     private List<String>  interestedAreas;
 
-
+    private String companyDetails;
+    private String companyLink;
 
     private String companyName;
+
+
+
     public String getCompanyName() {
         return companyName;
     }
@@ -91,8 +95,37 @@ public class User extends Entity<Long>{
         this.userType = userType;
     }
 
+    public User(String firstName, String lastName, String date, String gender, String email, String userType, String companyName, String companyDetails, String companyLink) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.date = date;
+        this.gender = gender;
+        //this.password = password;
+        this.email = email;
+        this.companyName = companyName;
+        this.userType = userType;
+        this.companyDetails = companyDetails;
+        this.companyLink= companyLink;
+    }
+
     public User() {
 
+    }
+
+    public String getCompanyDetails() {
+        return companyDetails;
+    }
+
+    public void setCompanyDetails(String companyDetails) {
+        this.companyDetails = companyDetails;
+    }
+
+    public String getCompanyLink() {
+        return companyLink;
+    }
+
+    public void setCompanyLink(String companyLink) {
+        this.companyLink = companyLink;
     }
 
     public String getEmail() {

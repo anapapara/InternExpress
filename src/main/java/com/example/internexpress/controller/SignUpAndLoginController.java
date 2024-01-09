@@ -73,24 +73,46 @@ public class SignUpAndLoginController {
         try {
             User user = userService.login(emailField1.getText(), passwordField1.getText());
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("main-view.fxml"));
+            AnchorPane root;
+            if(user.getUserType().equals("Company")){
+                loader.setLocation(getClass().getResource("main-view-company.fxml"));
 
-            AnchorPane root = loader.load();
-            MainViewController ctrl = loader.getController();
-            ctrl.setService(userService, user);
+                root = loader.load();
+                MainViewControllerCompany ctrl = loader.getController();
+                ctrl.setService(userService, user);
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("WinternEXPRESS");
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                Scene scene = new Scene(root);
+                dialogStage.setScene(scene);
 
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Winternet");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            Scene scene = new Scene(root);
-            dialogStage.setScene(scene);
+                ctrl.setStage(dialogStage);
+                dialogStage.show();
+                Stage stage = (Stage) loginButton.getScene().getWindow();
+                stage.close();
+            }else if(user.getUserType().equals("Student")){
+                loader.setLocation(getClass().getResource("main-view-student.fxml"));
+
+                root = loader.load();
+                MainViewControllerCompany ctrl = loader.getController();
+                ctrl.setService(userService, user);
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("WinternEXPRESS");
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                Scene scene = new Scene(root);
+                dialogStage.setScene(scene);
 
 
-            ctrl.setStage(dialogStage);
-            dialogStage.show();
-            Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.close();
+                ctrl.setStage(dialogStage);
+                dialogStage.show();
+                Stage stage = (Stage) loginButton.getScene().getWindow();
+                stage.close();
+            }
+
+
+
+
         } catch (ValidationException e) {
             errorLabel1.setText(e.getMessage());
         } catch (Exception e) {

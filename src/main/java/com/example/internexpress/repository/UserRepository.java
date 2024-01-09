@@ -147,7 +147,7 @@ public class UserRepository implements Repository<Long, User> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        String sql = "update user set first_name=?, last_name=?, birth_date=?,email=?,password=?, user_type=?, interested_areas=?, company_name=?, graduated_from=? where id=?";
+        String sql = "update user set first_name=?, last_name=?, date=?,email=?, user_type=?, interested_areas=?, company_name=?, graduated_from=?, company_details=?, company_link=? where id=?";
 
         try (Connection connection = jdbcUtils.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -156,33 +156,35 @@ public class UserRepository implements Repository<Long, User> {
             ps.setString(2, entity.getLastName());
             ps.setString(3, entity.getDate());
             ps.setString(4, entity.getEmail());
-            ps.setString(5, convertPassword.encrypt(entity.getPassword()));
-            ps.setString(6, entity.getUserType());
+            //ps.setString(5, convertPassword.encrypt(entity.getPassword()));
+            ps.setString(5, entity.getUserType());
 
-            if(!entity.getInterestedAreas().isEmpty()){
+            if(entity.getInterestedAreas()!=null){
                 String interstedAreasString = "";
                 for(String s : entity.getInterestedAreas()){
                     interstedAreasString += s;
                     interstedAreasString += ",";
                 }
                 interstedAreasString = interstedAreasString.replace(interstedAreasString.charAt(interstedAreasString.length() -1), ' ');
-                ps.setString(7, interstedAreasString);
+                ps.setString(6, interstedAreasString);
             }
             else{
-                ps.setString(7, null);
+                ps.setString(6, null);
             }
 
 
 
-            ps.setString(8, entity.getCompanyName());
-            ps.setString(9, entity.getGraduatedFrom());
-            ps.setLong(10, entity.getId());
+            ps.setString(7, entity.getCompanyName());
+            ps.setString(8, entity.getGraduatedFrom());
+            ps.setString(9, entity.getCompanyDetails());
+            ps.setString(10, entity.getCompanyLink());
+            ps.setLong(11, entity.getId());
 
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Optional.empty();
+        return Optional.of(entity);
     }
 
     @Override
@@ -240,13 +242,19 @@ public class UserRepository implements Repository<Long, User> {
                 String password = resultSet.getString(7);
                 String salt = resultSet.getString(8);
                 String userType = resultSet.getString(9);
+                String companyName = resultSet.getString("company_name");
                 salt = salt + password1;
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 byte[] hash = digest.digest(salt.getBytes(StandardCharsets.UTF_8));
                 BigInteger no = new BigInteger(1, hash);
                 String hashText = no.toString(16);
 
-                if (hashText.equals(password)) {
+                if (hashText.equals(password) && !companyName.equals("")) {
+                    User user = new User(firstName, lastName, date, gender, email, password, userType);
+                    user.setCompanyName(companyName);
+                    user.setId(id1);
+                    return Optional.of(user);
+                }else if(hashText.equals(password) && userType.equals("Student")){
                     User user = new User(firstName, lastName, date, gender, email, password, userType);
                     user.setId(id1);
                     return Optional.of(user);

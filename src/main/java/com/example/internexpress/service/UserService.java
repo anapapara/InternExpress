@@ -75,6 +75,17 @@ public class UserService {
         repositoryUser.save(user);
     }
 
+    public User updateCompanyProfile(Long id,String firstName, String lastName, String date, String gender, String email, String userType, String companyName, String companyDetails, String companyLink){
+        User user = new User(firstName, lastName, date, gender, email,userType,companyName,companyDetails,companyLink);
+        user.setId(id);
+        //validator.validate(user);
+        //checkId();
+        //user.setId(freeId);
+        return repositoryUser.update(user).orElse(null);
+
+
+    }
+
     public List<User> getAll() {
         return repositoryUser.findAll();
     }
