@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.internexpress.controller.SignUpAndLoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.internexpress.controller.SignUpAndLoginController">
    <left>
       <VBox alignment="CENTER" prefHeight="683.0" prefWidth="560.0" spacing="50.0" styleClass="withe-background" stylesheets="@../css/login-css.css" BorderPane.alignment="CENTER">
          <children>
@@ -117,7 +117,7 @@
                   <Insets left="50.0" right="50.0" />
                </opaqueInsets>
             </VBox>
-            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="582.0" prefWidth="430.0" spacing="30.0">
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="638.0" prefWidth="430.0" spacing="30.0">
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0" styleClass="input" stylesheets="@../css/login-css.css">
                      <children>
@@ -201,14 +201,24 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ComboBox fx:id="userTypeCombox1" prefHeight="31.0" prefWidth="141.0" styleClass="transparent" stylesheets="@../css/login-css.css" GridPane.columnIndex="1" />
-                              <Label alignment="CENTER" prefHeight="33.0" prefWidth="140.0" text="Register as" textFill="WHITE">
+                              <ComboBox fx:id="userTypeCombox1" onAction="#setHboxCompanyName" prefHeight="31.0" prefWidth="141.0" styleClass="transparent" stylesheets="@../css/login-css.css" GridPane.columnIndex="1" />
+                              <Label alignment="CENTER" prefHeight="75.0" prefWidth="140.0" text="Register as" textFill="WHITE">
                                  <font>
                                     <Font name="Bell MT" size="24.0" />
                                  </font>
                               </Label>
                            </children>
                         </GridPane>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hboxCompany" alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0" styleClass="input" stylesheets="@../css/login-css.css">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="30.0" prefWidth="169.0" text="Company Name" textFill="WHITE">
+                           <font>
+                              <Font name="Bell MT" size="24.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="companyNameField1" prefHeight="33.0" prefWidth="260.0" styleClass="transparent" stylesheets="@../css/login-css.css" />
                      </children>
                   </HBox>
                   <Button fx:id="registerButton" mnemonicParsing="false" onAction="#signupAction" prefHeight="40.0" prefWidth="215.0" style="-fx-background-color: white;" styleClass="radius" stylesheets="@../css/login-css.css" text="Register" textFill="#0d47a1">

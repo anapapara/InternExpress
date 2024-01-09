@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -36,7 +37,11 @@ public class SignUpAndLoginController {
     @FXML
     private TextField emailField2;
     @FXML
+    private TextField companyNameField1;
+    @FXML
     private Label errorLabel2;
+    @FXML
+    private HBox hboxCompany;
 
     @FXML
     private ComboBox userTypeCombox1;
@@ -47,6 +52,17 @@ public class SignUpAndLoginController {
     public void initialize() {
         genderCombobox.getItems().addAll("Male", "Female", "Other");
         userTypeCombox1.getItems().addAll("Student", "Company");
+        hboxCompany.setVisible(false);
+    }
+
+    public void setHboxCompanyName() {
+        Object value = userTypeCombox1.getValue();
+        if ("Company".equals(value)) {
+            hboxCompany.setVisible(true);
+        }
+        else {
+            hboxCompany.setVisible(false);
+        }
     }
 
     public void setServices(UserService service) {
@@ -96,17 +112,28 @@ public class SignUpAndLoginController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String date = formatter.format(datePicker.getValue());
         try {
-            User user = userService.signup(firstNameField.getText(), lastNameField.getText(), date, gender,
-                    emailField2.getText(), passwordField2.getText(), userTypeCombox1.getValue().toString());
+            Object value2 = userTypeCombox1.getValue();
+            User user;
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("main-view.fxml"));
+            AnchorPane root;
 
 
-            AnchorPane root = loader.load();
-
-            MainViewController ctrl = loader.getController();
-            ctrl.setService(userService, user);
-
+            if ("Company".equals(value2)) {
+                user = userService.signup(firstNameField.getText(), lastNameField.getText(), date, gender,
+                        emailField2.getText(), passwordField2.getText(), userTypeCombox1.getValue().toString(), companyNameField1.getText());
+                loader.setLocation(getClass().getResource("main-view-company.fxml"));
+                root = loader.load();
+                MainViewControllerCompany ctrl = loader.getController();
+                ctrl.setService(userService, user);
+            }
+            else{
+                user = userService.signup(firstNameField.getText(), lastNameField.getText(), date, gender,
+                        emailField2.getText(), passwordField2.getText(), userTypeCombox1.getValue().toString(), "");
+                loader.setLocation(getClass().getResource("main-view.fxml"));
+                root = loader.load();
+                MainViewController ctrl = loader.getController();
+                ctrl.setService(userService, user);
+            }
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Winternet");

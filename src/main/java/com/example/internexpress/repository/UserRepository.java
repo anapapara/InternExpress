@@ -101,7 +101,7 @@ public class UserRepository implements Repository<Long, User> {
                 "VALUES('" + entity.getId().intValue() + "','"
                 + entity.getFirstName() + "','" + entity.getLastName() + "','"
                 + entity.getDate() + "','" + entity.getGender() + "','"
-                + entity.getEmail() + "','" + hashtext + "','" + salt + "','" + entity.getUserType() + "','" + null + "','" + null + "','" + null + "')";
+                + entity.getEmail() + "','" + hashtext + "','" + salt + "','" + entity.getUserType() + "','" + null + "','" + entity.getCompanyName()+ "','" + null + "')";
         try (Connection connection = jdbcUtils.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.execute();

@@ -21,7 +21,8 @@ import java.util.Properties;
 public class Main extends Application {
 
     private static Stage stage;
-    private String dbPath = "E:\\re\\InternExpress\\src\\main\\resources\\bd.properties";
+    private String dbPath = "C:\\Users\\skump\\internExpress\\src\\main\\resources\\bd.properties";
+
 
     public static void main(String[] args) {
         launch(args);

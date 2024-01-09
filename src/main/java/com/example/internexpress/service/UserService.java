@@ -27,11 +27,12 @@ public class UserService {
         }
     }
 
-    public User signup(String firstName, String lastName, String date, String gender, String email, String password, String userType) {
+    public User signup(String firstName, String lastName, String date, String gender, String email, String password, String userType,String companyName) {
         if (repositoryUser.findUser(email).isPresent()) {
             throw new ValidationException("User exist already. Try to login.");
         } else {
             User newUser = new User(firstName, lastName, date, gender, email, password, userType);
+            newUser.setCompanyName(companyName);
             Long id = 0L;
             int nr = 0;
             for (User user : repositoryUser.findAll()) {
@@ -48,6 +49,7 @@ public class UserService {
             return newUser;
         }
     }
+
 
     private void checkId() {
         freeId = 0L;
