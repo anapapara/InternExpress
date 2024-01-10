@@ -143,8 +143,8 @@ public class InternshipRepository implements Repository<Integer, Internship> {
     @Override
     public Optional<Internship> save(Internship entity) {
         String query = "INSERT INTO internship_announcement (id, title, duration, domain, internship_type, start_date, description, details_link, created_by) " +
-                "VALUES (" + entity.getId() + ", " + entity.getTitle() + ", " + entity.getDuration() + ", " + entity.getDomain() + ", " + entity.getInternshipType()
-                + ", " + entity.getStartDate() + ", " + entity.getDescription() + ", " + entity.getDetailsLink() + ", " + entity.getCreatedBy().getId() + " );";
+                "VALUES ('" + entity.getId() + "','" + entity.getTitle() + "','" + entity.getDuration() + "','" + entity.getDomain() + "','" + entity.getInternshipType()
+                + "','" + entity.getStartDate() + "','" + entity.getDescription() + "','" + entity.getDetailsLink() + "','" + entity.getCreatedBy().getId() + " ');";
 
         try (
                 Connection connection = jdbcUtils.getConnection();

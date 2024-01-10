@@ -189,7 +189,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: white;">
                      <children>
-                        <Button fx:id="createEventButton" layoutX="653.0" layoutY="248.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="233.0" style="-fx-background-color: #2196F3;" styleClass="radius" stylesheets="@../css/login-css.css" text="Create announcement" textFill="WHITE" />
+                        <Button fx:id="openCreateViewButton" layoutX="653.0" layoutY="248.0" mnemonicParsing="false" onAction="#openCreateView" prefHeight="32.0" prefWidth="233.0" style="-fx-background-color: #2196F3;" styleClass="radius" stylesheets="@../css/login-css.css" text="Create announcement" textFill="WHITE" />
 <!--                        <TableView fx:id="tableViewFriends" blendMode="DARKEN" layoutX="256.0" layoutY="130.0" prefHeight="192.0" prefWidth="433.0">-->
 <!--                          <style>-fx-border-color: #19647E; -fx-border-width: 2;</style>-->
 <!--                            <columns>-->

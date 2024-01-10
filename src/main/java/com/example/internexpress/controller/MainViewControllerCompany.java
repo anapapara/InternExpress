@@ -8,12 +8,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
@@ -23,6 +25,7 @@ import java.util.List;
 public class MainViewControllerCompany {
 
 
+    public Button createEventButton;
     @FXML
     private Label firstNameLabel;
     @FXML
@@ -80,6 +83,7 @@ public class MainViewControllerCompany {
         this.loggedUser = entity;
         this.internshipService = iservice;
         setFieldsValues();
+        init();
         initializeEvents();
 
 
@@ -90,7 +94,7 @@ public class MainViewControllerCompany {
         List<Internship> myInternships = internshipService.getInternshipsByCreator(loggedUser.getId());
         List<Internship> myMockedList = new ArrayList<>();
         myMockedList.add(new Internship("MockedInternship","3 months","Law","hybrid","10.02.2024","Lawyer wanna be","link",loggedUser));
-        if(myInternships != null){
+        if(myInternships.size() != 0){
             userInternships.setAll(myInternships);
             //listViewSuggestedEvents.setCellFactory(param -> new XCell("Subscribe", "-fx-background-color: #2196F3; -fx-text-fill:  #fff;-fx-border-color:  #90CAF9;-fx-border-width: 0 2 2 0;"));
             listViewUserInternships.setCellFactory(param -> new XCell("View applicants", "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;"));
@@ -103,9 +107,22 @@ public class MainViewControllerCompany {
 
     }
 
+    public void init(){
+        List<Internship> myInternships = internshipService.getInternshipsByCreator(loggedUser.getId());
+        List<Internship> myMockedList = new ArrayList<>();
+        myMockedList.add(new Internship("MockedInternship","3 months","Law","hybrid","10.02.2024","Lawyer wanna be","link",loggedUser));
+        if(myInternships.size()!=0){
+            userInternships.setAll(myInternships);
+        }else{
+            userInternships.setAll(myMockedList);
+        }
+
+    }
+
 
     @FXML
     public void initialize() {
+        listViewUserInternships.setItems(userInternships);
     }
 
 
@@ -125,7 +142,29 @@ public class MainViewControllerCompany {
         loggedUser = userService.updateCompanyProfile(loggedUser.getId(),firstNameField.getText(), lastNameField.getText(), birthdateField.getEditor().getText(),genderTextField.getText(),emailTextField.getText(), loggedUser.getUserType(), companyNameField.getText(), companyDetailsField.getText(),companyLinkField.getText());
         setFieldsValues();
     }
+    
+    public void createAnnouncement(ActionEvent actionEvent){
+        
+    }
 
+    public void openCreateView(ActionEvent actionEvent) throws IOException {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("create-internship-anouncement-view.fxml"));
+            AnchorPane root = loader.load();
+            CreateAnnouncementController ctrl = loader.getController();
+            ctrl.setService(userService,loggedUser,internshipService);
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Create announcement");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(root);
+            dialogStage.setScene(scene);
+            dialogStage.setOnCloseRequest(h -> userInternships.setAll(internshipService.getInternshipsByCreator(loggedUser.getId())));
+            dialogStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     //INNER CLASSES ------------------------------------

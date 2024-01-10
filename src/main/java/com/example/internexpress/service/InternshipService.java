@@ -62,6 +62,6 @@ public class InternshipService {
     }
 
     public List<Internship> getInternshipsByCreator(Long id){
-        return null;
+        return repositoryInternship.findByCreator(id);
     };
 }

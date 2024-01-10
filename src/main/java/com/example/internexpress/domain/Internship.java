@@ -15,6 +15,8 @@ public class Internship extends Entity<Integer> {
 
     private List<User> applicants;
 
+    private List<User> acceptedUsers;
+
     public Internship(String title, String duration, String domain, String internshipType, String startDate, String description, String detailsLink, User createdBy) {
         this.title = title;
         this.duration = duration;
@@ -101,5 +103,18 @@ public class Internship extends Entity<Integer> {
 
     public void setApplicants(List<User> applicants) {
         this.applicants = applicants;
+    }
+
+    @Override
+    public String toString() {
+        return "Internship{" +
+                "title='" + title + '\'' +
+                ", duration='" + duration + '\'' +
+                ", domain='" + domain + '\'' +
+                ", internshipType='" + internshipType + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", description='" + description + '\'' +
+                ", detailsLink='" + detailsLink + '\'' +
+                '}';
     }
 }
