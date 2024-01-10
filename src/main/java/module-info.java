@@ -12,4 +12,5 @@ module com.example.internexpress {
     exports com.example.internexpress.repository;
     exports com.example.internexpress.validator;
     opens com.example.internexpress.controller to javafx.fxml;
+    opens com.example.internexpress.domain to javafx.fxml;
 }

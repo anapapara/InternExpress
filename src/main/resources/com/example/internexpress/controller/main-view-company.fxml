@@ -24,7 +24,7 @@
    <children>
       <TabPane fx:id="tabPane" prefHeight="700.0" prefWidth="1000.0" styleClass="my-tab" stylesheets="@../css/login-css.css" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab fx:id="accountTab" onSelectionChanged="#onSwitchToAccountTab" style="-fx-background-color: white;" text="ACCOUNT">
+          <Tab style="-fx-background-color: white;" text="ACCOUNT">
             <content>
               <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #E3F2FD;">
                      <children>
@@ -185,7 +185,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab fx:id="announcmentsTab" onSelectionChanged="#onSwitchToAnnouncmentsTab" style="-fx-background-color: white;" text="ANNOUNCEMENTS">
+          <Tab style="-fx-background-color: white;" text="ANNOUNCEMENTS">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: white;">
                      <children>

@@ -1,8 +1,9 @@
 package com.example.internexpress.controller;
 
-import com.example.internexpress.domain.Entity;
 import com.example.internexpress.domain.User;
 import com.example.internexpress.service.UserService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -57,6 +58,7 @@ public class MainViewControllerCompany {
     private Stage stage;
     private UserService userService;
 
+    //ObservableList<Internship> userInternships = FXCollections.observableArrayList();
 
     public void setStage(Stage s) {
         this.stage = s;
@@ -70,6 +72,14 @@ public class MainViewControllerCompany {
 
 
     }
+
+//    private void initializeEvents() {
+//        //suggestedEvents.setAll(eventService.getSuggestedEventsForUser(networkService.getLoggedUser()));
+//        userInternships.setAll(internshipService.getEventsForUser();
+//        listViewSuggestedEvents.setCellFactory(param -> new XCell("Subscribe", "-fx-background-color: #2196F3; -fx-text-fill:  #fff;-fx-border-color:  #90CAF9;-fx-border-width: 0 2 2 0;"));
+//        listViewUserEvents.setCellFactory(param -> new XCell("Unsubscribe", "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;"));
+//
+//    }
 
 
     @FXML
