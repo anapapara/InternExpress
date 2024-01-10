@@ -33,7 +33,10 @@ public class InternshipService {
 
 
     public void addInternship(String title, String duration, String domain, String internshipType, String startDate, String description, String detailsLink, User createdBy) {
-        //to do
+        Internship internship = new Internship(title, duration, domain, internshipType, startDate, description, detailsLink, createdBy);
+        checkId();
+        internship.setId(freeId);
+        repositoryInternship.save(internship);
     }
 
 
@@ -41,12 +44,20 @@ public class InternshipService {
         return repositoryInternship.findAll();
     }
 
-    public void deleteInternship(String id1) {
-
+    public void deleteInternship(Integer id) {
+        repositoryInternship.delete(id);
     }
 
     public Internship getInternship(Integer id) {
-        //todo
-        return null;
+        return repositoryInternship.findOne(id).orElse(null);
+    }
+
+    public List<Internship> getInternshipsByDomain(String domain) {
+        return repositoryInternship.findByDomain(domain);
+    }
+
+    public void addAppliance(Internship entity, User user) {
+        entity.addApplicant(user);
+        repositoryInternship.saveAppliance(entity, user);
     }
 }
