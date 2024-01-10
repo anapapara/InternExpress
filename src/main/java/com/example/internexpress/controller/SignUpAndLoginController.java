@@ -1,6 +1,7 @@
 package com.example.internexpress.controller;
 
 import com.example.internexpress.domain.User;
+import com.example.internexpress.service.InternshipService;
 import com.example.internexpress.service.UserService;
 import com.example.internexpress.validator.ValidationException;
 import javafx.fxml.FXML;
@@ -48,6 +49,8 @@ public class SignUpAndLoginController {
 
     private UserService userService;
 
+    private InternshipService internshipService;
+
     @FXML
     public void initialize() {
         genderCombobox.getItems().addAll("Male", "Female", "Other");
@@ -65,8 +68,9 @@ public class SignUpAndLoginController {
         }
     }
 
-    public void setServices(UserService service) {
+    public void setServices(UserService service, InternshipService iService) {
         this.userService = service;
+        this.internshipService = iService;
     }
 
     public void loginAction() {
@@ -79,7 +83,7 @@ public class SignUpAndLoginController {
 
                 root = loader.load();
                 MainViewControllerCompany ctrl = loader.getController();
-                ctrl.setService(userService, user);
+                ctrl.setService(userService, user,internshipService);
                 Stage dialogStage = new Stage();
                 dialogStage.setTitle("WinternEXPRESS");
                 dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -96,7 +100,7 @@ public class SignUpAndLoginController {
 
                 root = loader.load();
                 MainViewControllerCompany ctrl = loader.getController();
-                ctrl.setService(userService, user);
+                ctrl.setService(userService, user,internshipService);
                 Stage dialogStage = new Stage();
                 dialogStage.setTitle("WinternEXPRESS");
                 dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -146,7 +150,7 @@ public class SignUpAndLoginController {
                 loader.setLocation(getClass().getResource("main-view-company.fxml"));
                 root = loader.load();
                 MainViewControllerCompany ctrl = loader.getController();
-                ctrl.setService(userService, user);
+                ctrl.setService(userService, user,internshipService);
             }
             else{
                 user = userService.signup(firstNameField.getText(), lastNameField.getText(), date, gender,

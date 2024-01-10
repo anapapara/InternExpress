@@ -201,7 +201,7 @@
 <!--                              <Blend mode="BLUE" />-->
 <!--                           </effect>-->
 <!--                        </TableView>-->
-                        <ListView fx:id="listViewUserEvents" layoutX="36.0" layoutY="288.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="380.0" prefWidth="933.0" style="-fx-border-color: #90CAF9; -fx-border-width: 2;" />
+                        <ListView fx:id="listViewUserInternships" layoutX="36.0" layoutY="288.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="380.0" prefWidth="933.0" style="-fx-border-color: #90CAF9; -fx-border-width: 2;" />
                         <VBox layoutX="563.0" layoutY="43.0" prefHeight="146.0" prefWidth="337.0">
                            <children>
                               <Label alignment="CENTER" prefHeight="82.0" prefWidth="461.0" text="Are you looking" textFill="#2196f3">

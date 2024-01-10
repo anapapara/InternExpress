@@ -49,4 +49,8 @@ public class InternshipService {
         //todo
         return null;
     }
+
+    public List<Internship> getInternshipsByCreator(Long id){
+        return null;
+    };
 }

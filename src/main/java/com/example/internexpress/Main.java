@@ -2,9 +2,12 @@ package com.example.internexpress;
 
 import com.example.internexpress.controller.SignUpAndLoginController;
 
+import com.example.internexpress.domain.Internship;
 import com.example.internexpress.domain.User;
+import com.example.internexpress.repository.InternshipRepository;
 import com.example.internexpress.repository.Repository;
 import com.example.internexpress.repository.UserRepository;
+import com.example.internexpress.service.InternshipService;
 import com.example.internexpress.service.UserService;
 import com.example.internexpress.validator.UserValidator;
 import javafx.application.Application;
@@ -21,7 +24,7 @@ import java.util.Properties;
 public class Main extends Application {
 
     private static Stage stage;
-    private String dbPath = "C:\\Users\\anama\\OneDrive\\Desktop\\ReqEng\\InternExpress\\src\\main\\resources\\bd.properties";
+    private String dbPath = "C:\\Users\\manma\\MasterIS\\Ingineria cerintelor\\InternExpress\\src\\main\\resources\\bd.properties";
 
     public static void main(String[] args) {
         launch(args);
@@ -40,11 +43,14 @@ public class Main extends Application {
         Repository<Long, User> userDatabaseRepository = new UserRepository(props);
         UserService userService = new UserService(userDatabaseRepository, new UserValidator());
 
+        Repository<Integer, Internship> internshipRepository = new InternshipRepository(props);
+        InternshipService internshipService = new InternshipService(internshipRepository);
+
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("controller/login-register-WinternExpress.fxml"));
         BorderPane root = loader.load();
         SignUpAndLoginController ctrl = loader.getController();
-        ctrl.setServices(userService);
+        ctrl.setServices(userService, internshipService);
 
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("WinternEXPRESS");
