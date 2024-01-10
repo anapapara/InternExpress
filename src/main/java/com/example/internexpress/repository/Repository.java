@@ -1,9 +1,11 @@
 package com.example.internexpress.repository;
 
-import com.example.internexpress.domain.*;
+import com.example.internexpress.domain.Entity;
+import com.example.internexpress.domain.Internship;
+import com.example.internexpress.domain.User;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public interface Repository<ID, E extends Entity<ID>> {
@@ -55,13 +57,15 @@ public interface Repository<ID, E extends Entity<ID>> {
         throw new UnsupportedOperationException();
     }
 
-    default ArrayList<E> findRoles(User user) {
+    default List<E> findByDomain(String domain) {
         throw new UnsupportedOperationException();
     }
 
-    default ArrayList<E> findMessages(Long id1, Long id2) {
+    default List<Internship> findByCreator(Long userId) {
         throw new UnsupportedOperationException();
     }
 
-
+    default void saveAppliance(E entity, User user) {
+        throw new UnsupportedOperationException();
+    }
 }
