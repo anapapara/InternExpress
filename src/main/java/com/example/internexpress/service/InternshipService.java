@@ -3,9 +3,7 @@ package com.example.internexpress.service;
 import com.example.internexpress.domain.Internship;
 import com.example.internexpress.domain.User;
 import com.example.internexpress.repository.Repository;
-import javafx.event.Event;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InternshipService {
@@ -67,12 +65,8 @@ public class InternshipService {
         return repositoryInternship.findByCreator(id);
     };
 
-    public List<User> getAllApplicants(Integer idInternship){
-        //return repositoryInternship.findAllApplicants(idInternship);
-        return repositoryInternship.findOne(idInternship).get().getApplicants();
-    }
-
-    public void handleAppliance(User selected, Internship selectedInternship, String status) {
+    public void handleAcceptAppliance(User selected, Internship selectedInternship, String status) {
+        selectedInternship.addAcceptedUser(selected);
         repositoryInternship.changeStatus(selectedInternship, selected, status);
     }
 

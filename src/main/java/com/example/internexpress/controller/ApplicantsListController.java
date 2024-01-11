@@ -54,8 +54,9 @@ public class ApplicantsListController {
             internshipApplicants.setAll(mockedList);
 
         }
-        listApplicantsView.setCellFactory(param -> new XCell("Accept", "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;"));
-        listApplicantsView.setCellFactory(param -> new XCell("Reject", "-fx-background-color: #2196F3; -fx-text-fill:  #fff;-fx-border-color:  #90CAF9;-fx-border-width: 0 2 2 0;"));
+        listApplicantsView.setCellFactory(param -> new XCell("Accept", "Reject",
+                "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;",
+                "-fx-background-color: #2196F3; -fx-text-fill:  #fff;-fx-border-color:  #90CAF9;-fx-border-width: 0 2 2 0;"));
 
     }
 
@@ -64,30 +65,41 @@ public class ApplicantsListController {
         HBox hbox = new HBox();
         Label label = new Label("");
         Pane pane = new Pane();
-        Button button = new Button("");
-        String btntext;
+        Button button1 = new Button("");
+        Button button2 = new Button("");
+        String buttonText1;
+        String buttonText2;
+        int selectedButton=0;
 
-        public XCell(String buttonText, String style) {
+        public XCell(String text1, String text2, String style1, String style2) {
             super();
-            btntext = buttonText;
-            button.setText(buttonText);
-            button.setStyle(style);
+            buttonText1 = text1;
+            buttonText2 = text2;
+            button1.setText(buttonText1);
+            button1.setStyle(style1);
+            button2.setText(buttonText2);
+            button2.setStyle(style2);
             hbox.setStyle("-fx-alignment: center");
-            hbox.getChildren().addAll(label, pane, button);
+            hbox.getChildren().addAll(label, pane, button1, button2);
             label.setStyle("-fx-text-fill: #2196f3;");
             HBox.setHgrow(pane, Priority.ALWAYS);
-            button.setOnAction(e -> {
-                if (buttonText.equals("Accept")) {
-                    User selected = getListView().getItems().get(getIndex());
-                    ApplicantsListController.this.internshipService.handleAppliance(selected, selectedInternship, "Accepted");
+            button1.setOnAction(e -> {
+                User selected = getListView().getItems().get(getIndex());
+                if (buttonText1.equals("Accept")) {
+                    internshipService.handleAcceptAppliance(selected, selectedInternship, "Accepted");
                     internshipApplicants.setAll(selectedInternship.getApplicants());
-                    updateItem(selected, false);
-                } else {
-                    User selected = getListView().getItems().get(getIndex());
-                    ApplicantsListController.this.internshipService.handleAppliance(selected, selectedInternship, "Rejected");
-                    internshipApplicants.setAll(selectedInternship.getApplicants());
-                    updateItem(selected, false);
+                    selectedButton = 1;
                 }
+                updateItem(selected, false);
+            });
+            button2.setOnAction(e -> {
+                User selected = getListView().getItems().get(getIndex());
+                if (buttonText2.equals("Reject")) {
+                    internshipService.handleAcceptAppliance(selected, selectedInternship, "Rejected");
+                    internshipApplicants.setAll(selectedInternship.getApplicants());
+                    selectedButton = 2;
+                }
+                updateItem(selected, false);
             });
         }
 
@@ -98,8 +110,23 @@ public class ApplicantsListController {
             if (empty) {
                 setGraphic(null);
             } else {
-                this.button.setText(btntext);
-                this.button.setDisable(false);
+                if (selectedButton == 1) {
+                    this.button1.setText("Already accepted");
+                    this.button1.setDisable(true);
+                    this.button2.setDisable(true);
+                } else if (selectedButton == 2) {
+                    this.button2.setText("Already rejected");
+                    this.button2.setDisable(true);
+                    this.button1.setDisable(true);
+                }
+                else{
+                    if(selectedInternship.getAcceptedUsers().contains(item)){
+                        this.button1.setText("Already accepted");
+                        this.button1.setDisable(true);
+                        this.button2.setDisable(true);
+                    }
+                }
+
                 label.setText(item != null ? item.toString() : "<null>");
                 setGraphic(hbox);
             }

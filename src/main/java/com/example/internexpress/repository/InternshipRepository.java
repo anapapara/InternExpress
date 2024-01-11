@@ -26,7 +26,7 @@ public class InternshipRepository implements Repository<Integer, Internship> {
 
             Optional<Internship> internship = Optional.empty();
             while (resultSet.next()) {
-                Integer id1 = Integer.parseInt(resultSet.getString("id"));
+                int id1 = Integer.parseInt(resultSet.getString("id"));
                 String title = resultSet.getString("title");
                 String duration = resultSet.getString("duration");
                 String domain = resultSet.getString("domain");
@@ -57,7 +57,7 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                     statement2.setInt(1, id1);
                     ResultSet resultSet2 = statement2.executeQuery();
                     while (resultSet2.next()) {
-                        Long id2 = Long.parseLong(resultSet.getString("id"));
+                        Long id2 = Long.parseLong(resultSet2.getString("id"));
                         String firstName1 = resultSet2.getString("first_name");
                         String lastName1 = resultSet2.getString("last_name");
                         String date1 = resultSet2.getString("date");
@@ -126,7 +126,7 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                     statement2.setInt(1, id1);
                     ResultSet resultSet2 = statement2.executeQuery();
                     while (resultSet2.next()) {
-                        Long id2 = Long.parseLong(resultSet.getString("id"));
+                        Long id2 = Long.parseLong(resultSet2.getString("id"));
                         String firstName1 = resultSet2.getString("first_name");
                         String lastName1 = resultSet2.getString("last_name");
                         String date1 = resultSet2.getString("date");
@@ -294,7 +294,7 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                     statement2.setInt(1, id1);
                     ResultSet resultSet2 = statement2.executeQuery();
                     while (resultSet2.next()) {
-                        Long id2 = Long.parseLong(resultSet.getString("id"));
+                        Long id2 = Long.parseLong(resultSet2.getString("id"));
                         String firstName1 = resultSet2.getString("first_name");
                         String lastName1 = resultSet2.getString("last_name");
                         String date1 = resultSet2.getString("date");
@@ -363,7 +363,7 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                     statement2.setInt(1, id1);
                     ResultSet resultSet2 = statement2.executeQuery();
                     while (resultSet2.next()) {
-                        Long id2 = Long.parseLong(resultSet.getString("id"));
+                        Long id2 = Long.parseLong(resultSet2.getString("id"));
                         String firstName1 = resultSet2.getString("first_name");
                         String lastName1 = resultSet2.getString("last_name");
                         String date1 = resultSet2.getString("date");

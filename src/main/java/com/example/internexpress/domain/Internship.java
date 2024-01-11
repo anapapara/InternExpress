@@ -12,11 +12,7 @@ public class Internship extends Entity<Integer> {
     private String description;
     private String detailsLink;
     private User createdBy;
-
     private List<User> applicants;
-
-
-
     private List<User> acceptedUsers;
 
     public Internship(String title, String duration, String domain, String internshipType, String startDate, String description, String detailsLink, User createdBy) {
@@ -29,6 +25,7 @@ public class Internship extends Entity<Integer> {
         this.detailsLink = detailsLink;
         this.createdBy = createdBy;
         this.applicants = new ArrayList<>();
+        this.acceptedUsers = new ArrayList<>();
     }
 
     public Internship(String title, String duration, String domain, String internshipType, String startDate, String description, String detailsLink, User createdBy, List<User> applicants) {
@@ -127,15 +124,19 @@ public class Internship extends Entity<Integer> {
         this.acceptedUsers = acceptedUsers;
     }
 
+    public void addAcceptedUser(User user) {
+        this.acceptedUsers.add(user);
+    }
+
     @Override
     public String toString() {
         return
                 "TITLE: " + title + '\n' +
-                "DURATION: " + duration + '\n' +
-                "DOMAIN: " + domain + '\n' +
-                "INTERNSHIP_TYPE: " + internshipType + '\n' +
-                "START DATE: " + startDate + '\n' +
-                "DESCRIPTION: " + description + '\n' +
-                "DETAILS_LINK: " + detailsLink + '\n';
+                        "DURATION: " + duration + '\n' +
+                        "DOMAIN: " + domain + '\n' +
+                        "INTERNSHIP_TYPE: " + internshipType + '\n' +
+                        "START DATE: " + startDate + '\n' +
+                        "DESCRIPTION: " + description + '\n' +
+                        "DETAILS_LINK: " + detailsLink + '\n';
     }
 }

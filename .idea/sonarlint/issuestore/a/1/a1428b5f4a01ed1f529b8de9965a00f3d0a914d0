@@ -1,11 +1,0 @@
-
-e
-java:S3655H"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ëÎ›
-Q	java:S107%"<Method has 8 parameters, which is greater than 7 authorized.(¯êÏÄ
-7
-java:S1116D"Remove this empty statement.(ôŸŽìúÿÿÿÿ
-V	java:S125G"<This block of commented-out lines of code should be removed.(¡Ä²Óþÿÿÿÿ
-E
-java:S1128"/Remove this unused import 'javafx.event.Event'.(ô”áñ
-F
-java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ

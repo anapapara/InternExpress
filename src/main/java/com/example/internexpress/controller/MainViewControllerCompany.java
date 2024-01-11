@@ -90,13 +90,11 @@ public class MainViewControllerCompany {
     }
 
     private void initializeEvents() {
-        //suggestedEvents.setAll(eventService.getSuggestedEventsForUser(networkService.getLoggedUser()));
         List<Internship> myInternships = internshipService.getInternshipsByCreator(loggedUser.getId());
         List<Internship> myMockedList = new ArrayList<>();
         myMockedList.add(new Internship("MockedInternship","3 months","Law","hybrid","10.02.2024","Lawyer wanna be","link",loggedUser));
         if(myInternships.size() != 0){
             userInternships.setAll(myInternships);
-            //listViewSuggestedEvents.setCellFactory(param -> new XCell("Subscribe", "-fx-background-color: #2196F3; -fx-text-fill:  #fff;-fx-border-color:  #90CAF9;-fx-border-width: 0 2 2 0;"));
             listViewUserInternships.setCellFactory(param -> new XCell("View applicants", "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;"));
         }else{
             userInternships.setAll(myMockedList);
