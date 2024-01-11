@@ -15,6 +15,8 @@ public class Internship extends Entity<Integer> {
 
     private List<User> applicants;
 
+
+
     private List<User> acceptedUsers;
 
     public Internship(String title, String duration, String domain, String internshipType, String startDate, String description, String detailsLink, User createdBy) {
@@ -115,6 +117,14 @@ public class Internship extends Entity<Integer> {
 
     public void setApplicants(List<User> applicants) {
         this.applicants = applicants;
+    }
+
+    public List<User> getAcceptedUsers() {
+        return acceptedUsers;
+    }
+
+    public void setAcceptedUsers(List<User> acceptedUsers) {
+        this.acceptedUsers = acceptedUsers;
     }
 
     @Override

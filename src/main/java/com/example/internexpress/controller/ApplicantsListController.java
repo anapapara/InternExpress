@@ -15,7 +15,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,41 +28,20 @@ public class ApplicantsListController {
     private ListView<User> listApplicantsView;
     private ObservableList<User> internshipApplicants = FXCollections.observableArrayList();
 
-    public void setService(UserService userService, User loggedUser, InternshipService internshipService, Internship selectedInternship) {
-        this.userService = userService;
-        this.loggedUser = loggedUser;
-        this.internshipService = internshipService;
-        this.selectedInternship = selectedInternship;
-        init();
-        initializeApplicantsList();
-    }
-
-    private void initializeApplicantsList() {
-        List<User> allApplicants = internshipService.getAllApplicants(selectedInternship.getId());
-        List<User> mockedList = new ArrayList<>();
-        if (!allApplicants.isEmpty()) {
-            internshipApplicants.setAll(allApplicants);
-            listApplicantsView.setCellFactory(param -> new ApplicantsListController.XCell("Accept", "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;"));
-            listApplicantsView.setCellFactory(param -> new ApplicantsListController.XCell("Reject", "-fx-background-color: #2196F3; -fx-text-fill:  #fff;-fx-border-color:  #90CAF9;-fx-border-width: 0 2 2 0;"));
-        } else {
-            User user = new User();
-            user.setFirstName("error");
-            user.setLastName("error");
-            mockedList.add(user);
-            internshipApplicants.setAll(mockedList);
-            listApplicantsView.setCellFactory(param -> new ApplicantsListController.XCell("Accept", "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;"));
-            listApplicantsView.setCellFactory(param -> new ApplicantsListController.XCell("Reject", "-fx-background-color: #2196F3; -fx-text-fill:  #fff;-fx-border-color:  #90CAF9;-fx-border-width: 0 2 2 0;"));
-
-        }
-
-    }
-
     @FXML
     public void initialize() {
         listApplicantsView.setItems(internshipApplicants);
     }
 
-    public void init() {
+    public void setService(UserService userService, User loggedUser, InternshipService internshipService, Internship selectedInternship) {
+        this.userService = userService;
+        this.loggedUser = loggedUser;
+        this.internshipService = internshipService;
+        this.selectedInternship = selectedInternship;
+        initializeApplicantsList();
+    }
+
+    private void initializeApplicantsList() {
         List<User> allApplicants = selectedInternship.getApplicants();
         List<User> mockedList = new ArrayList<>();
         if (!allApplicants.isEmpty()) {
@@ -74,8 +52,13 @@ public class ApplicantsListController {
             user.setLastName("error");
             mockedList.add(user);
             internshipApplicants.setAll(mockedList);
+
         }
+        listApplicantsView.setCellFactory(param -> new XCell("Accept", "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;"));
+        listApplicantsView.setCellFactory(param -> new XCell("Reject", "-fx-background-color: #2196F3; -fx-text-fill:  #fff;-fx-border-color:  #90CAF9;-fx-border-width: 0 2 2 0;"));
+
     }
+
 
     class XCell extends ListCell<User> {
         HBox hbox = new HBox();
@@ -115,13 +98,8 @@ public class ApplicantsListController {
             if (empty) {
                 setGraphic(null);
             } else {
-//                if (ChronoUnit.HOURS.between(LocalDateTime.now(), item.getDateTime()) < 0) {
-//                    this.button.setText("Can't subscribe");
-//                    this.button.setDisable(true);
-//                } else {
                 this.button.setText(btntext);
                 this.button.setDisable(false);
-                //}
                 label.setText(item != null ? item.toString() : "<null>");
                 setGraphic(hbox);
             }

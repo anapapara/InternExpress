@@ -18,7 +18,7 @@ public class InternshipRepository implements Repository<Integer, Internship> {
 
     @Override
     public Optional<Internship> findOne(Integer id) {
-        String query = "SELECT * FROM internship_announcement WHERE id = " + id + ";";
+        String query = "SELECT * FROM internship_announcement i JOIN user u on i.created_by = u.id WHERE id = " + id + ";";
         try (
                 Connection connection = jdbcUtils.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query);
@@ -34,31 +34,48 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                 String startDate = resultSet.getString("start_date");
                 String description = resultSet.getString("description");
                 String link = resultSet.getString("details_link");
-                int createdById = Integer.parseInt(resultSet.getString("created_by"));
 
-                User createdBy = null;
-                String query2 = "SELECT * FROM user WHERE id=?";
-                try (PreparedStatement statement1 = connection.prepareStatement(query2);
-                     ResultSet resultSet1 = statement1.executeQuery()) {
-                    statement1.setInt(1, createdById);
+                Long userId = resultSet.getLong("id");
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                String date = resultSet.getString("date");
+                String gender = resultSet.getString("gender");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                String userType = resultSet.getString("user_type");
 
-                    while (resultSet1.next()) {
-                        Long userId = resultSet1.getLong(1);
-                        String firstName = resultSet1.getString(2);
-                        String lastName = resultSet1.getString(3);
-                        String date = resultSet1.getString(4);
-                        String gender = resultSet1.getString(5);
-                        String email = resultSet1.getString(6);
-                        String password = resultSet1.getString(7);
-                        String userType = resultSet1.getString(8);
+                User createdBy = new User(firstName, lastName, date, gender, email, password, userType);
+                createdBy.setId(userId);
 
-                        createdBy = new User(firstName, lastName, date, gender, email, password, userType);
-                        createdBy.setId(userId);
-                    }
-
-                }
                 Internship i = new Internship(title, duration, domain, internshipType, startDate, description, link, createdBy);
                 i.setId(id1);
+                List<User> users = new ArrayList<>();
+                List<User> acceptedUsers = new ArrayList<>();
+                String query3 = "SELECT * FROM internship_applicants JOIN user ON user.id = internship_applicants.user_id" +
+                        " WHERE internship_id=? ";
+                try (PreparedStatement statement2 = connection.prepareStatement(query3)) {
+                    statement2.setInt(1, id1);
+                    ResultSet resultSet2 = statement2.executeQuery();
+                    while (resultSet2.next()) {
+                        Long id2 = Long.parseLong(resultSet.getString("id"));
+                        String firstName1 = resultSet2.getString("first_name");
+                        String lastName1 = resultSet2.getString("last_name");
+                        String date1 = resultSet2.getString("date");
+                        String gender1 = resultSet2.getString("gender");
+                        String email1 = resultSet2.getString("email");
+                        String password1 = resultSet2.getString("password");
+                        String usertype = resultSet2.getString("user_type");
+                        String status = resultSet2.getString("status");
+                        User user = new User(firstName1, lastName1, date1, gender1, email1, password1, usertype);
+                        user.setId(id2);
+                        if (status.equals("Accepted")) acceptedUsers.add(user);
+                        users.add(user);
+                    }
+                }
+
+                i.setApplicants(users);
+                i.setAcceptedUsers(acceptedUsers);
+
                 internship = Optional.of(i);
             }
             return internship;
@@ -73,7 +90,7 @@ public class InternshipRepository implements Repository<Integer, Internship> {
         ArrayList<Internship> internships = new ArrayList<>();
         try (Connection connection = jdbcUtils.getConnection();
              PreparedStatement statement = connection.prepareStatement(
-                     "SELECT * from internship_announcement");
+                     "SELECT * from internship_announcement JOIN user u on u.id = internship_announcement.created_by");
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -85,82 +102,57 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                 String startDate = resultSet.getString("start_date");
                 String description = resultSet.getString("description");
                 String link = resultSet.getString("details_link");
-                int createdById = Integer.parseInt(resultSet.getString("created_by"));
 
-                User createdBy = null;
-                String query2 = "SELECT * FROM user WHERE id=?";
-                try (PreparedStatement statement1 = connection.prepareStatement(query2);
-                     ResultSet resultSet1 = statement1.executeQuery()) {
-                    statement1.setInt(1, createdById);
+                Long userId = resultSet.getLong("id");
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                String date = resultSet.getString("date");
+                String gender = resultSet.getString("gender");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                String userType = resultSet.getString("user_type");
 
-                    while (resultSet1.next()) {
-                        Long userId = resultSet1.getLong(1);
-                        String firstName = resultSet1.getString(2);
-                        String lastName = resultSet1.getString(3);
-                        String date = resultSet1.getString(4);
-                        String gender = resultSet1.getString(5);
-                        String email = resultSet1.getString(6);
-                        String password = resultSet1.getString(7);
-                        String userType = resultSet1.getString(8);
+                User createdBy = new User(firstName, lastName, date, gender, email, password, userType);
+                createdBy.setId(userId);
 
-                        createdBy = new User(firstName, lastName, date, gender, email, password, userType);
-                        createdBy.setId(userId);
-
-                    }
-
-                }
                 Internship i = new Internship(title, duration, domain, internshipType, startDate, description, link, createdBy);
-                i.setCreatedBy(createdBy);
                 i.setId(id1);
-                internships.add(i);
-                List<Long> usersId = new ArrayList<>();
-                String query3 = "SELECT * FROM internship_applicants WHERE internship_id=?";
-                try (PreparedStatement statement2 = connection.prepareStatement(query3);
-                     ResultSet resultSet2 = statement2.executeQuery()) {
+
+                List<User> users = new ArrayList<>();
+                List<User> acceptedUsers = new ArrayList<>();
+                String query3 = "SELECT * FROM internship_applicants JOIN user ON user.id = internship_applicants.user_id" +
+                        " WHERE internship_id=? ";
+                try (PreparedStatement statement2 = connection.prepareStatement(query3)) {
                     statement2.setInt(1, id1);
-                    while(resultSet2.next()){
-                        Long userId = resultSet2.getLong("user_id");
-                        usersId.add(userId);
+                    ResultSet resultSet2 = statement2.executeQuery();
+                    while (resultSet2.next()) {
+                        Long id2 = Long.parseLong(resultSet.getString("id"));
+                        String firstName1 = resultSet2.getString("first_name");
+                        String lastName1 = resultSet2.getString("last_name");
+                        String date1 = resultSet2.getString("date");
+                        String gender1 = resultSet2.getString("gender");
+                        String email1 = resultSet2.getString("email");
+                        String password1 = resultSet2.getString("password");
+                        String usertype = resultSet2.getString("user_type");
+                        String status = resultSet2.getString("status");
+                        User user = new User(firstName1, lastName1, date1, gender1, email1, password1, usertype);
+                        user.setId(id2);
+                        if (status.equals("Accepted")) acceptedUsers.add(user);
+                        users.add(user);
                     }
                 }
-                List<User> applicants = this.getApplicants(usersId);
-                i.setApplicants(applicants);
+
+                i.setApplicants(users);
+                i.setAcceptedUsers(acceptedUsers);
+
+                internships.add(i);
+
             }
             return internships;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return internships;
-    }
-
-    @Override
-    public List<User> getApplicants(List<Long> usersId) {
-        List<User> users = new ArrayList<>();
-        for(Long uId : usersId){
-            String query = "SELECT * FROM user WHERE id=" + uId + ";";
-            try (
-                    Connection connection = jdbcUtils.getConnection();
-                    PreparedStatement statement = connection.prepareStatement(query);
-                    ResultSet resultSet = statement.executeQuery()) {
-
-                while (resultSet.next()) {
-                    Long id1 = Long.parseLong(resultSet.getString(1));
-                    String firstName = resultSet.getString(2);
-                    String lastName = resultSet.getString(3);
-                    String date = resultSet.getString(4);
-                    String gender = resultSet.getString(5);
-                    String email = resultSet.getString(6);
-                    String password = resultSet.getString(7);
-                    String usertype = resultSet.getString(8);
-                    User user = new User(firstName, lastName, date, gender, email, password, usertype);
-                    user.setId(id1);
-                    users.add(user);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return users;
     }
 
 
@@ -264,49 +256,64 @@ public class InternshipRepository implements Repository<Integer, Internship> {
         ArrayList<Internship> internships = new ArrayList<>();
         try (
                 Connection connection = jdbcUtils.getConnection();
-                PreparedStatement statement = connection.prepareStatement(
-                        "SELECT * from internship_announcement WHERE domain=?")
-        ) {
+                PreparedStatement statement = connection.prepareStatement("SELECT * from internship_announcement JOIN" +
+                        " user ON user.id = internship_announcement.created_by WHERE domain=?")) {
             statement.setString(1, domain);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Integer id1 = Integer.parseInt(resultSet.getString("id"));
+                int id1 = Integer.parseInt(resultSet.getString("id"));
                 String title = resultSet.getString("title");
                 String duration = resultSet.getString("duration");
                 String internshipType = resultSet.getString("internship_type");
                 String startDate = resultSet.getString("start_date");
                 String description = resultSet.getString("description");
                 String link = resultSet.getString("details_link");
-                int createdById = Integer.parseInt(resultSet.getString("created_by"));
 
-                User createdBy = null;
-                String query2 = "SELECT * FROM user WHERE id=?";
-                try (PreparedStatement statement1 = connection.prepareStatement(query2);
-                     ResultSet resultSet1 = statement1.executeQuery()) {
-                    statement1.setInt(1, createdById);
+                Long userId = resultSet.getLong("id");
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                String date = resultSet.getString("date");
+                String gender = resultSet.getString("gender");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                String userType = resultSet.getString("user_type");
 
-                    while (resultSet1.next()) {
-                        Long userId = resultSet.getLong(1);
-                        String firstName = resultSet.getString(2);
-                        String lastName = resultSet.getString(3);
-                        String date = resultSet.getString(4);
-                        String gender = resultSet.getString(5);
-                        String email = resultSet.getString(6);
-                        String password = resultSet.getString(7);
-                        String userType = resultSet.getString(8);
+                User createdBy = new User(firstName, lastName, date, gender, email, password, userType);
+                createdBy.setId(userId);
 
-                        createdBy = new User(firstName, lastName, date, gender, email, password, userType);
-                        createdBy.setId(userId);
-                    }
-
-                }
 
                 Internship i = new Internship(title, duration, domain, internshipType, startDate, description, link, createdBy);
                 i.setId(id1);
+
+                List<User> users = new ArrayList<>();
+                List<User> acceptedUsers = new ArrayList<>();
+                String query3 = "SELECT * FROM internship_applicants JOIN user ON user.id = internship_applicants.user_id" +
+                        " WHERE internship_id=? ";
+                try (PreparedStatement statement2 = connection.prepareStatement(query3)) {
+                    statement2.setInt(1, id1);
+                    ResultSet resultSet2 = statement2.executeQuery();
+                    while (resultSet2.next()) {
+                        Long id2 = Long.parseLong(resultSet.getString("id"));
+                        String firstName1 = resultSet2.getString("first_name");
+                        String lastName1 = resultSet2.getString("last_name");
+                        String date1 = resultSet2.getString("date");
+                        String gender1 = resultSet2.getString("gender");
+                        String email1 = resultSet2.getString("email");
+                        String password1 = resultSet2.getString("password");
+                        String usertype = resultSet2.getString("user_type");
+                        String status = resultSet2.getString("status");
+                        User user = new User(firstName1, lastName1, date1, gender1, email1, password1, usertype);
+                        user.setId(id2);
+                        if (status.equals("Accepted")) acceptedUsers.add(user);
+                        users.add(user);
+                    }
+                }
+
+                i.setApplicants(users);
+                i.setAcceptedUsers(acceptedUsers);
                 internships.add(i);
             }
-            return internships;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -318,14 +325,14 @@ public class InternshipRepository implements Repository<Integer, Internship> {
         ArrayList<Internship> internships = new ArrayList<>();
         try (
                 Connection connection = jdbcUtils.getConnection();
-                PreparedStatement statement = connection.prepareStatement(
-                        "SELECT * from internship_announcement WHERE created_by=?")
+                PreparedStatement statement = connection.prepareStatement("SELECT * from internship_announcement JOIN " +
+                        "user ON user.id = internship_announcement.created_by WHERE created_by=?")
         ) {
             statement.setLong(1, userId);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Integer id1 = Integer.parseInt(resultSet.getString("id"));
+                int id1 = Integer.parseInt(resultSet.getString("id"));
                 String title = resultSet.getString("title");
                 String duration = resultSet.getString("duration");
                 String internshipType = resultSet.getString("internship_type");
@@ -333,46 +340,48 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                 String startDate = resultSet.getString("start_date");
                 String description = resultSet.getString("description");
                 String link = resultSet.getString("details_link");
-                int createdById = Integer.parseInt(resultSet.getString("created_by"));
 
-                User createdBy = null;
-                String query2 = "SELECT * FROM user WHERE id=?";
-                try (PreparedStatement statement1 = connection.prepareStatement(query2);
-                     ResultSet resultSet1 = statement1.executeQuery()) {
-                    statement1.setInt(1, createdById);
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                String date = resultSet.getString("date");
+                String gender = resultSet.getString("gender");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                String userType = resultSet.getString("user_type");
 
-                    while (resultSet1.next()) {
-                        String firstName = resultSet1.getString(2);
-                        String lastName = resultSet1.getString(3);
-                        String date = resultSet1.getString(4);
-                        String gender = resultSet1.getString(5);
-                        String email = resultSet1.getString(6);
-                        String password = resultSet1.getString(7);
-                        String userType = resultSet1.getString(8);
-
-                        createdBy = new User(firstName, lastName, date, gender, email, password, userType);
-                        createdBy.setId(userId);
-                    }
-
-                }
+                User createdBy = new User(firstName, lastName, date, gender, email, password, userType);
+                createdBy.setId(userId);
 
                 Internship i = new Internship(title, duration, domain, internshipType, startDate, description, link, createdBy);
                 i.setId(id1);
-                internships.add(i);
-                List<Long> usersId = new ArrayList<>();
-                String query3 = "SELECT * FROM internship_applicants WHERE internship_id=?";
-                try (PreparedStatement statement2 = connection.prepareStatement(query3);
-                     ResultSet resultSet2 = statement2.executeQuery()) {
+
+                List<User> users = new ArrayList<>();
+                List<User> acceptedUsers = new ArrayList<>();
+                String query3 = "SELECT * FROM internship_applicants JOIN user ON user.id = internship_applicants.user_id" +
+                        " WHERE internship_id=? ";
+                try (PreparedStatement statement2 = connection.prepareStatement(query3)) {
                     statement2.setInt(1, id1);
-                    while(resultSet2.next()){
-                        Long userId1 = resultSet2.getLong("user_id");
-                        usersId.add(userId1);
+                    ResultSet resultSet2 = statement2.executeQuery();
+                    while (resultSet2.next()) {
+                        Long id2 = Long.parseLong(resultSet.getString("id"));
+                        String firstName1 = resultSet2.getString("first_name");
+                        String lastName1 = resultSet2.getString("last_name");
+                        String date1 = resultSet2.getString("date");
+                        String gender1 = resultSet2.getString("gender");
+                        String email1 = resultSet2.getString("email");
+                        String password1 = resultSet2.getString("password");
+                        String usertype = resultSet2.getString("user_type");
+                        String status = resultSet2.getString("status");
+                        User user = new User(firstName1, lastName1, date1, gender1, email1, password1, usertype);
+                        user.setId(id2);
+                        if (status.equals("Accepted")) acceptedUsers.add(user);
+                        users.add(user);
                     }
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
                 }
-                List<User> applicants = this.getApplicants(usersId);
-                i.setApplicants(applicants);
+
+                i.setApplicants(users);
+                i.setAcceptedUsers(acceptedUsers);
+                internships.add(i);
             }
 
         } catch (SQLException e) {
