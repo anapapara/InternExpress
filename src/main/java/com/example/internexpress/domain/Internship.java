@@ -107,14 +107,13 @@ public class Internship extends Entity<Integer> {
 
     @Override
     public String toString() {
-        return "Internship{" +
-                "title='" + title + '\'' +
-                ", duration='" + duration + '\'' +
-                ", domain='" + domain + '\'' +
-                ", internshipType='" + internshipType + '\'' +
-                ", startDate='" + startDate + '\'' +
-                ", description='" + description + '\'' +
-                ", detailsLink='" + detailsLink + '\'' +
-                '}';
+        return
+                "TITLE: " + title + '\n' +
+                "DURATION: " + duration + '\n' +
+                "DOMAIN: " + domain + '\n' +
+                "INTERNSHIP_TYPE: " + internshipType + '\n' +
+                "START DATE: " + startDate + '\n' +
+                "DESCRIPTION: " + description + '\n' +
+                "DETAILS_LINK: " + detailsLink + '\n';
     }
 }
