@@ -29,6 +29,18 @@ public class Internship extends Entity<Integer> {
         this.applicants = new ArrayList<>();
     }
 
+    public Internship(String title, String duration, String domain, String internshipType, String startDate, String description, String detailsLink, User createdBy, List<User> applicants) {
+        this.title = title;
+        this.duration = duration;
+        this.domain = domain;
+        this.internshipType = internshipType;
+        this.startDate = startDate;
+        this.description = description;
+        this.detailsLink = detailsLink;
+        this.createdBy = createdBy;
+        this.applicants = applicants;
+    }
+
     public void addApplicant(User applicant) {
         this.applicants.add(applicant);
     }

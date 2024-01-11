@@ -68,4 +68,10 @@ public interface Repository<ID, E extends Entity<ID>> {
     default void saveAppliance(E entity, User user) {
         throw new UnsupportedOperationException();
     }
+
+    //default List<User> findAllApplicants(Long internshipId){throw new UnsupportedOperationException();}
+
+    default void changeStatus(Internship entity, User user, String status) {throw new UnsupportedOperationException();}
+
+    default List<User> getApplicants(List<Long>userId) {throw new UnsupportedOperationException();}
 }

@@ -9,7 +9,7 @@
 
 E:/re/InternExpress/src/main/resources/bd.properties</remarks>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\manma\MasterIS\Ingineria cerintelor\InternExpress\internexpressDB</jdbc-url>
+      <jdbc-url>jdbc:sqlite:E:\re\InternExpress\internexpressDB</jdbc-url>
     </data-source>
   </component>
 </project>

@@ -175,6 +175,24 @@ public class MainViewControllerCompany {
         Button button = new Button("");
         String btntext;
 
+        public void openApplicantListView(ActionEvent actionEvent, Internship selectedInternship) throws IOException {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("view-applicants.fxml"));
+                AnchorPane root = loader.load();
+                ApplicantsListController ctrl = loader.getController();
+                ctrl.setService(userService,loggedUser,internshipService, selectedInternship);
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("View applicants");
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                Scene scene = new Scene(root);
+                dialogStage.setScene(scene);
+                dialogStage.setOnCloseRequest(h -> userInternships.setAll(internshipService.getInternshipsByCreator(loggedUser.getId())));
+                dialogStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         public XCell(String buttonText, String style) {
             super();
             btntext = buttonText;
@@ -188,6 +206,8 @@ public class MainViewControllerCompany {
                 //if (buttonText.equals("View applicants")) {
 
                     Internship selected = getListView().getItems().get(getIndex());
+
+
                     //ManageFriendsController.this.eventService.subscribeUser(selected, ManageFriendsController.this.networkService.getLoggedUser());
 
 
@@ -197,6 +217,11 @@ public class MainViewControllerCompany {
                     //updateNotificationLabel();
 
                     updateItem(selected, false);
+                try {
+                    openApplicantListView(e, selected);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
 
 //                } else {
 //                    Internship selected = getListView().getItems().get(getIndex());

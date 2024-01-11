@@ -7,10 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 public class InternshipRepository implements Repository<Integer, Internship> {
     private final JdbcUtils jdbcUtils;
@@ -46,14 +43,14 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                     statement1.setInt(1, createdById);
 
                     while (resultSet1.next()) {
-                        Long userId = resultSet.getLong(1);
-                        String firstName = resultSet.getString(2);
-                        String lastName = resultSet.getString(3);
-                        String date = resultSet.getString(4);
-                        String gender = resultSet.getString(5);
-                        String email = resultSet.getString(6);
-                        String password = resultSet.getString(7);
-                        String userType = resultSet.getString(8);
+                        Long userId = resultSet1.getLong(1);
+                        String firstName = resultSet1.getString(2);
+                        String lastName = resultSet1.getString(3);
+                        String date = resultSet1.getString(4);
+                        String gender = resultSet1.getString(5);
+                        String email = resultSet1.getString(6);
+                        String password = resultSet1.getString(7);
+                        String userType = resultSet1.getString(8);
 
                         createdBy = new User(firstName, lastName, date, gender, email, password, userType);
                         createdBy.setId(userId);
@@ -80,7 +77,7 @@ public class InternshipRepository implements Repository<Integer, Internship> {
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                Integer id1 = Integer.parseInt(resultSet.getString("id"));
+                int id1 = Integer.parseInt(resultSet.getString("id"));
                 String title = resultSet.getString("title");
                 String duration = resultSet.getString("duration");
                 String domain = resultSet.getString("domain");
@@ -97,30 +94,73 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                     statement1.setInt(1, createdById);
 
                     while (resultSet1.next()) {
-                        Long userId = resultSet.getLong(1);
-                        String firstName = resultSet.getString(2);
-                        String lastName = resultSet.getString(3);
-                        String date = resultSet.getString(4);
-                        String gender = resultSet.getString(5);
-                        String email = resultSet.getString(6);
-                        String password = resultSet.getString(7);
-                        String userType = resultSet.getString(8);
+                        Long userId = resultSet1.getLong(1);
+                        String firstName = resultSet1.getString(2);
+                        String lastName = resultSet1.getString(3);
+                        String date = resultSet1.getString(4);
+                        String gender = resultSet1.getString(5);
+                        String email = resultSet1.getString(6);
+                        String password = resultSet1.getString(7);
+                        String userType = resultSet1.getString(8);
 
                         createdBy = new User(firstName, lastName, date, gender, email, password, userType);
                         createdBy.setId(userId);
+
                     }
 
                 }
-
                 Internship i = new Internship(title, duration, domain, internshipType, startDate, description, link, createdBy);
+                i.setCreatedBy(createdBy);
                 i.setId(id1);
                 internships.add(i);
+                List<Long> usersId = new ArrayList<>();
+                String query3 = "SELECT * FROM internship_applicants WHERE internship_id=?";
+                try (PreparedStatement statement2 = connection.prepareStatement(query3);
+                     ResultSet resultSet2 = statement2.executeQuery()) {
+                    statement2.setInt(1, id1);
+                    while(resultSet2.next()){
+                        Long userId = resultSet2.getLong("user_id");
+                        usersId.add(userId);
+                    }
+                }
+                List<User> applicants = this.getApplicants(usersId);
+                i.setApplicants(applicants);
             }
             return internships;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return internships;
+    }
+
+    @Override
+    public List<User> getApplicants(List<Long> usersId) {
+        List<User> users = new ArrayList<>();
+        for(Long uId : usersId){
+            String query = "SELECT * FROM user WHERE id=" + uId + ";";
+            try (
+                    Connection connection = jdbcUtils.getConnection();
+                    PreparedStatement statement = connection.prepareStatement(query);
+                    ResultSet resultSet = statement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Long id1 = Long.parseLong(resultSet.getString(1));
+                    String firstName = resultSet.getString(2);
+                    String lastName = resultSet.getString(3);
+                    String date = resultSet.getString(4);
+                    String gender = resultSet.getString(5);
+                    String email = resultSet.getString(6);
+                    String password = resultSet.getString(7);
+                    String usertype = resultSet.getString(8);
+                    User user = new User(firstName, lastName, date, gender, email, password, usertype);
+                    user.setId(id1);
+                    users.add(user);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return users;
     }
 
 
@@ -302,13 +342,13 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                     statement1.setInt(1, createdById);
 
                     while (resultSet1.next()) {
-                        String firstName = resultSet.getString(2);
-                        String lastName = resultSet.getString(3);
-                        String date = resultSet.getString(4);
-                        String gender = resultSet.getString(5);
-                        String email = resultSet.getString(6);
-                        String password = resultSet.getString(7);
-                        String userType = resultSet.getString(8);
+                        String firstName = resultSet1.getString(2);
+                        String lastName = resultSet1.getString(3);
+                        String date = resultSet1.getString(4);
+                        String gender = resultSet1.getString(5);
+                        String email = resultSet1.getString(6);
+                        String password = resultSet1.getString(7);
+                        String userType = resultSet1.getString(8);
 
                         createdBy = new User(firstName, lastName, date, gender, email, password, userType);
                         createdBy.setId(userId);
@@ -319,12 +359,113 @@ public class InternshipRepository implements Repository<Integer, Internship> {
                 Internship i = new Internship(title, duration, domain, internshipType, startDate, description, link, createdBy);
                 i.setId(id1);
                 internships.add(i);
+                List<Long> usersId = new ArrayList<>();
+                String query3 = "SELECT * FROM internship_applicants WHERE internship_id=?";
+                try (PreparedStatement statement2 = connection.prepareStatement(query3);
+                     ResultSet resultSet2 = statement2.executeQuery()) {
+                    statement2.setInt(1, id1);
+                    while(resultSet2.next()){
+                        Long userId1 = resultSet2.getLong("user_id");
+                        usersId.add(userId1);
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                List<User> applicants = this.getApplicants(usersId);
+                i.setApplicants(applicants);
             }
-            return internships;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return internships;
+    }
+
+//    @Override
+//    public List<User> findAllApplicants(long id) {
+//        List<User> applicantsList = new ArrayList<>();
+//        //String query = "SELECT * FROM internship_applicants WHERE internship_id = " + id + ";";
+//        String query = "SELECT u.id, u.first_name, u.last_name, u.date, u.gender, u.email, " +
+//                " u.interested_areas, u.graduated_from " +
+//                "FROM user u " +
+//                "JOIN internship_applicants ia ON u.id = ia.user_id " +
+//                "WHERE ia.internship_id = ?";
+//        try (
+//                Connection connection = jdbcUtils.getConnection();
+//                PreparedStatement statement = connection.prepareStatement(query);
+//                statement.setLong(9, id);
+//                ResultSet resultSet = statement.executeQuery()) {
+//
+//            while (resultSet.next()) {
+//                Integer id1 = Integer.parseInt(resultSet.getString("internship_id"));
+//                Long userId = resultSet.getLong(1);
+//                String firstName = resultSet.getString(2);
+//                String lastName = resultSet.getString(3);
+//                String date = resultSet.getString(4);
+//                String gender = resultSet.getString(5);
+//                String email = resultSet.getString(6);
+//                String interestedAreas = resultSet.getString(7);
+//                String graduatedFrom = resultSet.getString(8);
+//
+//                User user = new User(firstName, lastName, date, gender, email, "", "Student");
+//                user.setGraduatedFrom(graduatedFrom);
+//                user.setInterestedAreas(Arrays.stream(interestedAreas.split(",")).toList());
+//                applicantsList.add(user);
+//            }
+
+//            Optional<Internship> internship = Optional.empty();
+//            while (resultSet.next()) {
+//                Integer id1 = Integer.parseInt(resultSet.getString("internship_id"));
+//                //Integer id2 = Integer.parseInt(resultSet.getString("user_id"));
+//                String status = resultSet.getString("status");
+//
+//                User user = null;
+//                String query2 = "SELECT * FROM user WHERE id=?";
+//                try (PreparedStatement statement1 = connection.prepareStatement(query2);
+//                     ResultSet resultSet1 = statement1.executeQuery()) {
+//                    statement1.setInt(1, id2);
+//
+//                    while (resultSet1.next()) {
+//                        Long userId = resultSet.getLong(1);
+//                        String firstName = resultSet.getString(2);
+//                        String lastName = resultSet.getString(3);
+//                        String date = resultSet.getString(4);
+//                        String gender = resultSet.getString(5);
+//                        String email = resultSet.getString(6);
+//                        String password = resultSet.getString(7);
+//                        String userType = resultSet.getString(8);
+//
+//                        user = new User(firstName, lastName, date, gender, email, password, userType);
+//                        user.setId(userId);
+//                    }
+//
+//                }
+//                applicantsList.add(user);
+//                //applicantsList = Optional.of();
+//            }
+//            return applicantsList;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        //return Optional.empty();
+//        return null;
+//    }
+
+    @Override
+    public void changeStatus(Internship entity, User user, String status) {
+        String sql = "UPDATE internship_applicants SET status=? WHERE internship_id=? AND user_id=?";
+        try (
+                Connection connection = jdbcUtils.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setString(1, status);
+            ps.setInt(2, entity.getId());
+            ps.setLong(3, user.getId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 
