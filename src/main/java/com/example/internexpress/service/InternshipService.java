@@ -61,9 +61,11 @@ public class InternshipService {
         repositoryInternship.saveAppliance(entity, user);
     }
 
-    public List<Internship> getInternshipsByCreator(Long id){
+    public List<Internship> getInternshipsByCreator(Long id) {
         return repositoryInternship.findByCreator(id);
-    };
+    }
+
+    ;
 
     public void handleAcceptAppliance(User selected, Internship selectedInternship, String status) {
         selectedInternship.addAcceptedUser(selected);
@@ -71,4 +73,7 @@ public class InternshipService {
     }
 
 
+    public String getApplianceStatus(Long userId, Integer internshipId) {
+        return repositoryInternship.getApplianceStatus(userId, internshipId);
+    }
 }

@@ -158,13 +158,14 @@ public class InternshipRepository implements Repository<Integer, Internship> {
 
     @Override
     public void saveAppliance(Internship entity, User user) {
-        String sql = "INSERT INTO internship_applicants(internship_id, user_id) VALUES (?,?)";
+        String sql = "INSERT INTO internship_applicants(internship_id, user_id,status) VALUES (?,?,?)";
         try (
                 Connection connection = jdbcUtils.getConnection();
                 PreparedStatement ps = connection.prepareStatement(sql)
         ) {
             ps.setInt(1, entity.getId());
             ps.setLong(2, user.getId());
+            ps.setString(3, "Pending");
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -422,7 +423,7 @@ public class InternshipRepository implements Repository<Integer, Internship> {
 //                applicantsList.add(user);
 //            }
 
-//            Optional<Internship> internship = Optional.empty();
+    //            Optional<Internship> internship = Optional.empty();
 //            while (resultSet.next()) {
 //                Integer id1 = Integer.parseInt(resultSet.getString("internship_id"));
 //                //Integer id2 = Integer.parseInt(resultSet.getString("user_id"));
@@ -459,6 +460,25 @@ public class InternshipRepository implements Repository<Integer, Internship> {
 //        //return Optional.empty();
 //        return null;
 //    }
+    @Override
+    public String getApplianceStatus(Long userId, Integer internshipId) {
+        String status = "";
+        String sql = "SELECT * FROM internship_applicants WHERE user_id=? AND internship_id=?";
+        try (
+                Connection connection = jdbcUtils.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setLong(1, userId);
+            ps.setInt(2, internshipId);
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next())
+                status = resultSet.getString("status");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
 
     @Override
     public void changeStatus(Internship entity, User user, String status) {

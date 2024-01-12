@@ -74,4 +74,6 @@ public interface Repository<ID, E extends Entity<ID>> {
     default void changeStatus(Internship entity, User user, String status) {throw new UnsupportedOperationException();}
 
     default List<User> getApplicants(List<Long>userId) {throw new UnsupportedOperationException();}
+
+    default String getApplianceStatus(Long userId, ID internshipId){throw new UnsupportedOperationException();}
 }
