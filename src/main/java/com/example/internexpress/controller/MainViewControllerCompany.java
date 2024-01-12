@@ -38,6 +38,8 @@ public class MainViewControllerCompany {
     private Label emailLabel;
     @FXML
     private Button openCreateViewButton;
+    @FXML
+    private Button logoutButton;
 
     @FXML
     private TextField firstNameField;
@@ -48,7 +50,7 @@ public class MainViewControllerCompany {
     @FXML
     private TextField emailTextField;
     @FXML
-    private TextField genderTextField;
+    private ComboBox<String> genderCombobox;
 
     @FXML
     private DatePicker birthdateField;
@@ -80,7 +82,7 @@ public class MainViewControllerCompany {
         this.stage = s;
     }
 
-    public void setService(UserService userService, User entity,InternshipService iservice) {
+    public void setService(UserService userService, User entity, InternshipService iservice) {
         this.userService = userService;
         this.loggedUser = entity;
         this.internshipService = iservice;
@@ -94,53 +96,77 @@ public class MainViewControllerCompany {
     private void initializeEvents() {
         List<Internship> myInternships = internshipService.getInternshipsByCreator(loggedUser.getId());
         List<Internship> myMockedList = new ArrayList<>();
-        myMockedList.add(new Internship("MockedInternship","3 months","Law","hybrid","10.02.2024","Lawyer wanna be","link",loggedUser));
-        if(myInternships.size() != 0){
+        myMockedList.add(new Internship("MockedInternship", "3 months", "Law", "hybrid", "10.02.2024", "Lawyer wanna be", "link", loggedUser));
+        if (myInternships.size() != 0) {
             userInternships.setAll(myInternships);
             listViewUserInternships.setCellFactory(param -> new XCell("View applicants", "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;"));
-        }else{
+        } else {
             userInternships.setAll(myMockedList);
             listViewUserInternships.setCellFactory(param -> new XCell("View applicants", "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;"));
         }
 
 
-
     }
 
-    public void init(){
+    public void init() {
         List<Internship> myInternships = internshipService.getInternshipsByCreator(loggedUser.getId());
         List<Internship> myMockedList = new ArrayList<>();
-        myMockedList.add(new Internship("MockedInternship","3 months","Law","hybrid","10.02.2024","Lawyer wanna be","link",loggedUser));
-        if(myInternships.size()!=0){
+        myMockedList.add(new Internship("MockedInternship", "3 months", "Law", "hybrid", "10.02.2024", "Lawyer wanna be", "link", loggedUser));
+        if (myInternships.size() != 0) {
             userInternships.setAll(myInternships);
-        }else{
+        } else {
             userInternships.setAll(myMockedList);
         }
 
     }
 
+    public void logoutAction(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("login-register-WinternExpress.fxml"));
+
+        BorderPane root = loader.load();
+
+        SignUpAndLoginController ctrl = loader.getController();
+        ctrl.setServices(userService, internshipService);
+
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle("Winternet");
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        Scene scene = new Scene(root);
+        dialogStage.setScene(scene);
+
+        dialogStage.show();
+        Stage stage = (Stage) logoutButton.getScene().getWindow();
+        stage.close();
+    }
 
     @FXML
     public void initialize() {
+        genderCombobox.getItems().addAll("Male", "Female", "Other");
         listViewUserInternships.setItems(userInternships);
     }
 
 
-     public void setFieldsValues(){
-         firstNameField.setText(loggedUser.getFirstName());
-         lastNameField.setText(loggedUser.getLastName());
-         birthdateField.getEditor().setText(loggedUser.getDate());
-         switch (loggedUser.getGender()) {
-             case "F" -> genderTextField.setText("Female");
-             case "M" -> genderTextField.setText("Male");
-             default -> genderTextField.setText("Other");
-         }
-         emailTextField.setText(loggedUser.getEmail());
-         companyNameField.setText(loggedUser.getCompanyName());
-     }
+    public void setFieldsValues() {
+        firstNameField.setText(loggedUser.getFirstName());
+        lastNameField.setText(loggedUser.getLastName());
+        birthdateField.getEditor().setText(loggedUser.getDate());
+        switch (loggedUser.getGender()) {
+            case "Female" -> genderCombobox.setValue("Female");
+            case "Male" -> genderCombobox.setValue("Male");
+            default -> genderCombobox.setValue("Other");
+        }
+        emailTextField.setText(loggedUser.getEmail());
+        companyNameField.setText(loggedUser.getCompanyName());
+        companyDetailsField.setText(loggedUser.getCompanyDetails());
+        companyLinkField.setText(loggedUser.getCompanyLink());
+    }
+
     public void updateProfile(ActionEvent actionEvent) {
-        loggedUser = userService.updateCompanyProfile(loggedUser.getId(),firstNameField.getText(), lastNameField.getText(), birthdateField.getEditor().getText(),genderTextField.getText(),emailTextField.getText(), loggedUser.getUserType(), companyNameField.getText(), companyDetailsField.getText(),companyLinkField.getText());
+        loggedUser = userService.updateCompanyProfile(loggedUser.getId(), firstNameField.getText(), lastNameField.getText(), birthdateField.getEditor().getText(), genderCombobox.getValue(), emailTextField.getText(), loggedUser.getUserType(), companyNameField.getText(), companyDetailsField.getText(), companyLinkField.getText());
         setFieldsValues();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION,"Your profile has been successfully updated!",ButtonType.CLOSE);
+        alert.show();
     }
 
 
@@ -150,7 +176,7 @@ public class MainViewControllerCompany {
             loader.setLocation(getClass().getResource("create-internship-anouncement-view.fxml"));
             AnchorPane root = loader.load();
             CreateAnnouncementController ctrl = loader.getController();
-            ctrl.setService(userService,loggedUser,internshipService);
+            ctrl.setService(userService, loggedUser, internshipService);
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Create announcement");
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -180,7 +206,7 @@ public class MainViewControllerCompany {
                 loader.setLocation(getClass().getResource("view-applicants.fxml"));
                 AnchorPane root = loader.load();
                 ApplicantsListController ctrl = loader.getController();
-                ctrl.setService(userService,loggedUser,internshipService, selectedInternship);
+                ctrl.setService(userService, loggedUser, internshipService, selectedInternship);
                 Stage dialogStage = new Stage();
                 dialogStage.setTitle("View applicants");
                 dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -194,6 +220,7 @@ public class MainViewControllerCompany {
                 e.printStackTrace();
             }
         }
+
         public XCell(String buttonText, String style) {
             super();
             btntext = buttonText;
@@ -206,18 +233,18 @@ public class MainViewControllerCompany {
             button.setOnAction(e -> {
                 //if (buttonText.equals("View applicants")) {
 
-                    Internship selected = getListView().getItems().get(getIndex());
+                Internship selected = getListView().getItems().get(getIndex());
 
 
-                    //ManageFriendsController.this.eventService.subscribeUser(selected, ManageFriendsController.this.networkService.getLoggedUser());
+                //ManageFriendsController.this.eventService.subscribeUser(selected, ManageFriendsController.this.networkService.getLoggedUser());
 
 
-                    //suggestedEvents.setAll(eventService.getSuggestedEventsForUser(networkService.getLoggedUser()));
-                    userInternships.setAll(internshipService.getInternshipsByCreator(loggedUser.getId()));
-                    //notifications.setAll(eventService.getEventsForNotification(networkService.getLoggedUser()));
-                    //updateNotificationLabel();
+                //suggestedEvents.setAll(eventService.getSuggestedEventsForUser(networkService.getLoggedUser()));
+                userInternships.setAll(internshipService.getInternshipsByCreator(loggedUser.getId()));
+                //notifications.setAll(eventService.getEventsForNotification(networkService.getLoggedUser()));
+                //updateNotificationLabel();
 
-                    updateItem(selected, false);
+                updateItem(selected, false);
                 try {
                     openApplicantListView(e, selected);
                 } catch (IOException ex) {

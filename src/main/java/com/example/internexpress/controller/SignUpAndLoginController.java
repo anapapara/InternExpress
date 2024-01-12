@@ -128,9 +128,9 @@ public class SignUpAndLoginController {
         String gender;
         Object value = genderCombobox.getValue();
         if ("Male".equals(value)) {
-            gender = "M";
+            gender = "Male";
         } else if ("Female".equals(value)) {
-            gender = "F";
+            gender = "Female";
         } else {
             gender = "other";
         }

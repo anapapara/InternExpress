@@ -101,7 +101,7 @@ public class UserRepository implements Repository<Long, User> {
                 "VALUES('" + entity.getId().intValue() + "','"
                 + entity.getFirstName() + "','" + entity.getLastName() + "','"
                 + entity.getDate() + "','" + entity.getGender() + "','"
-                + entity.getEmail() + "','" + hashtext + "','" + salt + "','" + entity.getUserType() + "','" + null + "','" + entity.getCompanyName()+ "','" + null + "')";
+                + entity.getEmail() + "','" + hashtext + "','" + salt + "','" + entity.getUserType() + "','" + null + "','" + entity.getCompanyName() + "','" + null + "')";
         try (Connection connection = jdbcUtils.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.execute();
@@ -147,7 +147,7 @@ public class UserRepository implements Repository<Long, User> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        String sql = "update user set first_name=?, last_name=?, date=?,email=?, user_type=?, interested_areas=?, company_name=?, graduated_from=?, company_details=?, company_link=? where id=?";
+        String sql = "update user set first_name=?, last_name=?, date=?,email=?, user_type=?, interested_areas=?, company_name=?, graduated_from=?, company_details=?, company_link=?,gender=? where id=?";
 
         try (Connection connection = jdbcUtils.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -159,26 +159,25 @@ public class UserRepository implements Repository<Long, User> {
             //ps.setString(5, convertPassword.encrypt(entity.getPassword()));
             ps.setString(5, entity.getUserType());
 
-            if(entity.getInterestedAreas()!=null){
+            if (entity.getInterestedAreas() != null) {
                 String interstedAreasString = "";
-                for(String s : entity.getInterestedAreas()){
+                for (String s : entity.getInterestedAreas()) {
                     interstedAreasString += s;
                     interstedAreasString += ",";
                 }
-                interstedAreasString = interstedAreasString.replace(interstedAreasString.charAt(interstedAreasString.length() -1), ' ');
+                interstedAreasString = interstedAreasString.substring(0, interstedAreasString.length() - 1);
                 ps.setString(6, interstedAreasString);
-            }
-            else{
+            } else {
                 ps.setString(6, null);
             }
-
 
 
             ps.setString(7, entity.getCompanyName());
             ps.setString(8, entity.getGraduatedFrom());
             ps.setString(9, entity.getCompanyDetails());
             ps.setString(10, entity.getCompanyLink());
-            ps.setLong(11, entity.getId());
+            ps.setString(11, entity.getGender());
+            ps.setLong(12, entity.getId());
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -206,12 +205,11 @@ public class UserRepository implements Repository<Long, User> {
                 String interstedAreas = resultSet.getString(9);
                 String companyName = resultSet.getString(10);
                 String graduatedFrom = resultSet.getString(11);
-                if(!companyName.equals("null")){
+                if (!companyName.equals("null")) {
                     User user = new User(firstName, lastName, date, gender, email, password, userType, companyName);
                     user.setId(id1);
                     return Optional.of(user);
-                }
-                else {
+                } else {
                     List<String> interstedAreasList;
                     interstedAreasList = Arrays.stream(interstedAreas.split(",")).toList();
                     User user = new User(firstName, lastName, date, gender, email, password, userType, interstedAreasList, graduatedFrom);
@@ -243,20 +241,34 @@ public class UserRepository implements Repository<Long, User> {
                 String salt = resultSet.getString(8);
                 String userType = resultSet.getString(9);
                 String companyName = resultSet.getString("company_name");
+                String companyDetails = resultSet.getString("company_details");
+                String companyLink = resultSet.getString("company_link");
+
+                String graduatedFrom = resultSet.getString("graduated_from");
+                String interestedAreasString = resultSet.getString("interested_areas");
+
+                List<String> interestedAreas = null;
+                if (interestedAreasString != null)
+                    interestedAreas = Arrays.stream(interestedAreasString.split(",")).toList();
+
                 salt = salt + password1;
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 byte[] hash = digest.digest(salt.getBytes(StandardCharsets.UTF_8));
                 BigInteger no = new BigInteger(1, hash);
                 String hashText = no.toString(16);
 
-                if (hashText.equals(password) && !companyName.equals("")) {
+                if (hashText.equals(password) && companyName != null && !companyName.equals("")) {
                     User user = new User(firstName, lastName, date, gender, email, password, userType);
                     user.setCompanyName(companyName);
+                    user.setCompanyDetails(companyDetails);
+                    user.setCompanyLink(companyLink);
                     user.setId(id1);
                     return Optional.of(user);
-                }else if(hashText.equals(password) && userType.equals("Student")){
+                } else if (hashText.equals(password) && userType.equals("Student")) {
                     User user = new User(firstName, lastName, date, gender, email, password, userType);
                     user.setId(id1);
+                    user.setInterestedAreas(interestedAreas);
+                    user.setGraduatedFrom(graduatedFrom);
                     return Optional.of(user);
                 }
             }

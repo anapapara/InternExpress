@@ -1,10 +1,0 @@
-
-8
-java:S1643¥"Use a StringBuilder instead.(ÿÅÇÊÿÿÿÿÿ
-3
-java:S1643¦"Use a StringBuilder instead.(žíâ®
-T
-java:S3516t"9Refactor this method to not always return the same value.(±ÍÓ¥ÿÿÿÿÿ
-P
-java:S1481š"4Remove this unused "convertPassword" local variable.(â¿Ô¥ùÿÿÿÿ
-W	java:S125Ÿ"<This block of commented-out lines of code should be removed.(ú¼ûþÿÿÿÿ

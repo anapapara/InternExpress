@@ -82,9 +82,14 @@ public class UserService {
         //checkId();
         //user.setId(freeId);
         return repositoryUser.update(user).orElse(null);
-
-
     }
+
+    public User updateStudentProfile(Long id,String firstName, String lastName, String date, String gender, String email, String userType, List<String>  interestedAreas, String graduatedFrom){
+        User user = new User(firstName, lastName, date, gender, email,"", graduatedFrom,interestedAreas,userType);
+        user.setId(id);
+        return repositoryUser.update(user).orElse(null);
+    }
+
 
     public List<User> getAll() {
         return repositoryUser.findAll();
