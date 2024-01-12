@@ -41,6 +41,15 @@ public class User extends Entity<Long>{
                 ", userType='" + userType + '\'' +
                 '}';
     }
+    public String toStringCustomForStudent() {
+        return "Candidate Informations" + '\n'+
+                "First Name: '" + firstName + '\n' +
+                "Last Name: '" + lastName + '\n' +
+                "Gender: '" + gender + '\n' +
+                "Email:'" + email + '\n' +
+                "Graduated From:'" + graduatedFrom + '\n' +
+                "Interested Areas:" + interestedAreas +'\n';
+    }
 
     private String userType;
     public String getUserType() {

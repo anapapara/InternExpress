@@ -4,19 +4,28 @@ import com.example.internexpress.domain.Internship;
 import com.example.internexpress.domain.User;
 import com.example.internexpress.service.InternshipService;
 import com.example.internexpress.service.UserService;
+import com.example.internexpress.validator.ValidationException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ApplicantsListController {
     private UserService userService;
@@ -26,6 +35,8 @@ public class ApplicantsListController {
 
     @FXML
     private ListView<User> listApplicantsView;
+    @FXML
+    private Button backButton;
     private ObservableList<User> internshipApplicants = FXCollections.observableArrayList();
 
     @FXML
@@ -54,13 +65,36 @@ public class ApplicantsListController {
             internshipApplicants.setAll(mockedList);
 
         }
+
         listApplicantsView.setCellFactory(param -> new XCell("Accept", "Reject",
                 "-fx-background-color:  #ffccd5  ; -fx-text-fill: #800f2f; -fx-border-color: #800f2f;-fx-border-width: 0 2 2 0;",
                 "-fx-background-color: #2196F3; -fx-text-fill:  #fff;-fx-border-color:  #90CAF9;-fx-border-width: 0 2 2 0;"));
 
     }
 
+    public void goBackAction(ActionEvent actionEvent) {
+        Stage stage = (Stage) backButton.getScene().getWindow();
+        stage.close();
 
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            AnchorPane root;
+            loader.setLocation(getClass().getResource("main-view-company.fxml"));
+            root = loader.load();
+            MainViewControllerCompany ctrl = loader.getController();
+            ctrl.setService(userService, loggedUser, internshipService);
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Winternet");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(root);
+            dialogStage.setScene(scene);
+
+
+            dialogStage.show();
+        }catch (ValidationException | IOException e) {
+            System.out.println(e);
+        }
+    }
     class XCell extends ListCell<User> {
         HBox hbox = new HBox();
         Label label = new Label("");
@@ -127,7 +161,7 @@ public class ApplicantsListController {
                     }
                 }
 
-                label.setText(item != null ? item.toString() : "<null>");
+                label.setText(item != null ? item.toStringCustomForStudent() : "<null>");
                 setGraphic(hbox);
             }
         }

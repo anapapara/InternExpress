@@ -99,7 +99,7 @@ public class SignUpAndLoginController {
                 loader.setLocation(getClass().getResource("main-view-student.fxml"));
 
                 root = loader.load();
-                MainViewControllerCompany ctrl = loader.getController();
+                MainViewControllerStudent ctrl = loader.getController();
                 ctrl.setService(userService, user,internshipService);
                 Stage dialogStage = new Stage();
                 dialogStage.setTitle("WinternEXPRESS");
@@ -155,10 +155,10 @@ public class SignUpAndLoginController {
             else{
                 user = userService.signup(firstNameField.getText(), lastNameField.getText(), date, gender,
                         emailField2.getText(), passwordField2.getText(), userTypeCombox1.getValue().toString(), "");
-                loader.setLocation(getClass().getResource("main-view.fxml"));
+                loader.setLocation(getClass().getResource("main-view-student.fxml"));
                 root = loader.load();
-                MainViewController ctrl = loader.getController();
-                ctrl.setService(userService, user);
+                MainViewControllerStudent ctrl = loader.getController();
+                ctrl.setService(userService, user,internshipService);
             }
 
             Stage dialogStage = new Stage();

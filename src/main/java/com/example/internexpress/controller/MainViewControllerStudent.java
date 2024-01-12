@@ -11,18 +11,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainViewControllerCompany {
+public class MainViewControllerStudent {
 
 
     public Button createEventButton;
@@ -67,6 +67,10 @@ public class MainViewControllerCompany {
 
     @FXML
     Button updateCompanyButton;
+    @FXML
+    private HBox hboxInterestedAreas;
+    @FXML
+    private ChoiceBox<String> interestedAreasChoiseBox;
 
     private User loggedUser;
     private Stage stage;
@@ -75,6 +79,7 @@ public class MainViewControllerCompany {
     private InternshipService internshipService;
 
     ObservableList<Internship> userInternships = FXCollections.observableArrayList();
+    ToggleButtonWithPopupExample controllerToggle = new ToggleButtonWithPopupExample();
 
     public void setStage(Stage s) {
         this.stage = s;
@@ -136,9 +141,21 @@ public class MainViewControllerCompany {
              default -> genderTextField.setText("Other");
          }
          emailTextField.setText(loggedUser.getEmail());
-         companyNameField.setText(loggedUser.getCompanyName());
+
+         ObservableList<String> interestedAreasObservableList =  FXCollections.observableArrayList("Computer Science","Law","Art");
+         ToggleButton toggleButton = controllerToggle.getToggleButton();
+
+         // Adding the MultiSelectChoiceBox to the existing HBox
+         hboxInterestedAreas.getChildren().addAll(toggleButton);
+
      }
+     /*
+    MARIA HELP
+    */
     public void updateProfile(ActionEvent actionEvent) {
+        //controllerToggle.selectCheckBox("Law");
+        //List<String> testlist = controllerToggle.getCheckedValues();
+        List<CheckBox> list = controllerToggle.getSelectedCheckBoxes();
         loggedUser = userService.updateCompanyProfile(loggedUser.getId(),firstNameField.getText(), lastNameField.getText(), birthdateField.getEditor().getText(),genderTextField.getText(),emailTextField.getText(), loggedUser.getUserType(), companyNameField.getText(), companyDetailsField.getText(),companyLinkField.getText());
         setFieldsValues();
     }
@@ -188,8 +205,6 @@ public class MainViewControllerCompany {
                 dialogStage.setScene(scene);
                 dialogStage.setOnCloseRequest(h -> userInternships.setAll(internshipService.getInternshipsByCreator(loggedUser.getId())));
                 dialogStage.show();
-                Stage stage = (Stage) button.getScene().getWindow();
-                stage.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
