@@ -6,6 +6,7 @@ import com.example.internexpress.service.InternshipService;
 import com.example.internexpress.service.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class MainViewControllerStudent {
 
@@ -73,6 +75,9 @@ public class MainViewControllerStudent {
     @FXML
     private ChoiceBox<String> interestedAreasChoiseBox;
 
+    @FXML
+    private TextField searchBar;
+
     private User loggedUser;
     private Stage stage;
     private UserService userService;
@@ -80,6 +85,9 @@ public class MainViewControllerStudent {
     private InternshipService internshipService;
 
     ObservableList<Internship> userInternships = FXCollections.observableArrayList();
+
+    FilteredList<Internship> filteredList;
+
     ToggleButtonWithPopupExample controllerToggle;
 
     public void setStage(Stage s) {
@@ -134,7 +142,22 @@ public class MainViewControllerStudent {
     @FXML
     public void initialize() {
         genderCombobox.getItems().addAll("Male", "Female", "Other");
-        listViewUserInternships.setItems(userInternships);
+        this.filteredList= new FilteredList<>(userInternships);
+        listViewUserInternships.setItems(filteredList);
+        this.filteredList.setPredicate((internship)-> {return true;});
+        this.searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+            this.filteredList.setPredicate(this.createPredicate(newValue));
+        });
+    }
+
+    private Predicate<? super Internship> createPredicate(String searchText) {
+        return (internship) -> {
+            if (searchText != null && !searchText.isEmpty() && !searchText.equals(" ")) {
+                return internship.getTitle().contains(searchText) || internship.getInternshipType().contains(searchText) || internship.getDuration().contains(searchText)|| internship.getDomain().contains(searchText);
+            } else {
+                return true;
+            }
+        };
     }
 
 
@@ -180,6 +203,22 @@ public class MainViewControllerStudent {
         dialogStage.show();
         Stage stage = (Stage) logoutButton.getScene().getWindow();
         stage.close();
+    }
+
+    public void searchInternship(){
+//        String domain = "";
+//        for(String i : loggedUser.getInterestedAreas()){
+//            domain+=i;
+//            domain+=",";
+//        }
+//        List<Internship> internships = internshipService.getInternshipsByDomain(domain.substring(0,domain.length()-1));
+//        userInternships.setAll(internships);
+//        FilteredList<Internship> filteredList = new FilteredList<>(userInternships, x -> true);
+//        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+//            filteredList.setPredicate(internship -> newValue.isEmpty() || newValue.isBlank()
+//                    || internship.getTitle().startsWith(newValue));
+//
+//        });
     }
 
 
@@ -244,16 +283,20 @@ public class MainViewControllerStudent {
                 if (button.getText().equals("Apply")) {
                     this.button.setText("Pending");
                     this.button.setDisable(true);
+                    //this.button.setStyle("-fx-background-color: #ffA500; -fx-text-fill: #FFFFFF;");
                 }
                 if (internshipService.getApplianceStatus(loggedUser.getId(), getListView().getItems().get(getIndex()).getId()).equals("Pending")) {
                     this.button.setText("Pending");
                     this.button.setDisable(true);
+                    this.button.setStyle("-fx-background-color: #ffA500; -fx-text-fill: #FFFFFF;");
                 } else if (internshipService.getApplianceStatus(loggedUser.getId(), getListView().getItems().get(getIndex()).getId()).equals("Accepted")) {
                     this.button.setText("Accepted");
                     this.button.setDisable(true);
+                    this.button.setStyle("-fx-background-color: #00ff00; -fx-text-fill: #FFFFFF;");
                 } else if (internshipService.getApplianceStatus(loggedUser.getId(), getListView().getItems().get(getIndex()).getId()).equals("Rejected")) {
                     this.button.setText("Rejected");
                     this.button.setDisable(true);
+                    this.button.setStyle("-fx-background-color: #ff0000; -fx-text-fill: #FFFFFF;");
                 } else {
                     this.button.setText(btntext);
                     this.button.setDisable(false);

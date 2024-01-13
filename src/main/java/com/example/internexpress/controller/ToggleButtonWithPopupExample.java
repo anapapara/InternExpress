@@ -35,7 +35,7 @@ public class ToggleButtonWithPopupExample {
 
     public ToggleButtonWithPopupExample(User loggedUser) {
         toggleButton = new ToggleButton("Show Job Areas");
-
+        toggleButton.setStyle("-fx-background-color:  #0d47a1; -fx-text-fill: #FFFFFF");
         CheckBoxTreeItem<String> item1 = new CheckBoxTreeItem<>("Computer Science");
         CheckBoxTreeItem<String> item2 = new CheckBoxTreeItem<>("Law");
         CheckBoxTreeItem<String> item3 = new CheckBoxTreeItem<>("Healthcare");

@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: white;" stylesheets="@../css/login-css.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.internexpress.controller.MainViewControllerCompany">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: white;" stylesheets="@../css/login-css.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.internexpress.controller.MainViewControllerCompany">
    <children>
       <TabPane fx:id="tabPane" prefHeight="700.0" prefWidth="1000.0" styleClass="my-tab" stylesheets="@../css/login-css.css" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -62,13 +62,13 @@
                                        <children>
                                           <HBox prefHeight="100.0" prefWidth="200.0">
                                              <children>
-                                                <Label prefHeight="52.0" prefWidth="326.0" text="User Informations" textFill="#2196f3">
+                                                <Label prefHeight="52.0" prefWidth="326.0" text="User Information" textFill="#2196f3">
                                                    <font>
                                                       <Font name="Bell MT Bold" size="30.0" />
                                                    </font>
                                                 </Label>
                                                 <VBox prefHeight="91.0" prefWidth="62.0" />
-                                                <Label prefHeight="52.0" prefWidth="394.0" text="Company Informations" textFill="#2196f3">
+                                                <Label prefHeight="52.0" prefWidth="394.0" text="Company Information" textFill="#2196f3">
                                                    <font>
                                                       <Font name="Bell MT Bold" size="30.0" />
                                                    </font>
