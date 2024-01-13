@@ -39,19 +39,15 @@
                <children>
                   <ImageView fitHeight="143.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/snow.png" />
+                        <Image url="@../images/%232196F3%20(1).png" />
                      </image>
                   </ImageView>
-                  <HBox prefHeight="125.0" prefWidth="380.0" />
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <ImageView fitHeight="112.0" fitWidth="179.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
-                           <image>
-                              <Image url="@../images/logo.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </HBox>
+                  <HBox prefHeight="143.0" prefWidth="265.0" />
+                  <ImageView fitHeight="145.0" fitWidth="252.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                     <image>
+                        <Image url="@../images/company_members.png" />
+                     </image>
+                  </ImageView>
                </children>
             </HBox>
             <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="269.0" prefWidth="430.0" spacing="30.0">
