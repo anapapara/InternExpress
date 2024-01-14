@@ -43,9 +43,9 @@
                      </image>
                   </ImageView>
                   <HBox prefHeight="143.0" prefWidth="265.0" />
-                  <ImageView fitHeight="145.0" fitWidth="252.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                      <image>
-                        <Image url="@../images/company_members.png" />
+                        <Image url="@../images/quote1.png" />
                      </image>
                   </ImageView>
                </children>
